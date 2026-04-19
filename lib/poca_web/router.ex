@@ -20,6 +20,13 @@ defmodule PocaWeb.Router do
     get "/", PageController, :home
   end
 
+  scope "/auth", PocaWeb do
+    pipe_through :browser
+
+    get "/:provider", AuthController, :request
+    get "/:provider/callback", AuthController, :callback
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", PocaWeb do
   #   pipe_through :api

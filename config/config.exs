@@ -14,6 +14,11 @@ config :poca, PocaWeb.Endpoint,
   pubsub_server: Poca.PubSub,
   live_view: [signing_salt: "egJFWTJZ"]
 
+config :ueberauth, Ueberauth,
+  providers: [
+    google: {Ueberauth.Strategy.Google, []}
+  ]
+
 config :esbuild,
   version: "0.25.4",
   poca: [

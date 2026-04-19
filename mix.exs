@@ -47,6 +47,7 @@ defmodule Poca.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
+      {:ueberauth_google, "~> 0.12"},
       {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
