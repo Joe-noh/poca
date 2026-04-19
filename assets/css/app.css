@@ -12,7 +12,7 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 /* Make LiveView wrapper divs transparent for layout */
-[data-phx-session], [data-phx-teleported-src] { display: contents }
-
-/* @import "@phosphor-icons/web/regular";
-@import "@phosphor-icons/web/bold"; */
+[data-phx-session],
+[data-phx-teleported-src] {
+  display: contents;
+}
