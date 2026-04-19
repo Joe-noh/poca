@@ -1,0 +1,31 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      phoenix:
+        specifier: ../deps/phoenix
+        version: link:../deps/phoenix
+      phoenix_html:
+        specifier: ../deps/phoenix_html
+        version: link:../deps/phoenix_html
+      phoenix_live_view:
+        specifier: ../deps/phoenix_live_view
+        version: link:../deps/phoenix_live_view
+      topbar:
+        specifier: ^3.0.1
+        version: 3.0.1
+
+packages:
+
+  topbar@3.0.1:
+    resolution: {integrity: sha512-3CFWdkUC4KLsyLpW8IcX5EXskFtJtNl9O2/qNO/4Ncd/lWgipY/pmyv0D8bw2bTepl/+MUGhNhu2n3IitUuQNA==}
+
+snapshots:
+
+  topbar@3.0.1: {}

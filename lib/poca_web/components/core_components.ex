@@ -19,8 +19,6 @@ defmodule PocaWeb.CoreComponents do
       we build on. You will use it for layout, sizing, flexbox, grid, and
       spacing.
 
-    * [Heroicons](https://heroicons.com) - see `icon/1` for usage.
-
     * [Phoenix.Component](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html) -
       the component system used by Phoenix. Some components, such as `<.link>`
       and `<.form>`, are defined there.
@@ -64,15 +62,15 @@ defmodule PocaWeb.CoreComponents do
         @kind == :info && "alert-info",
         @kind == :error && "alert-error"
       ]}>
-        <.icon :if={@kind == :info} name="hero-information-circle" class="size-5 shrink-0" />
-        <.icon :if={@kind == :error} name="hero-exclamation-circle" class="size-5 shrink-0" />
+        <.icon :if={@kind == :info} name="check-circle" class="size-5 shrink-0" />
+        <.icon :if={@kind == :error} name="warning-circle" class="size-5 shrink-0" />
         <div>
           <p :if={@title} class="font-semibold">{@title}</p>
           <p>{msg}</p>
         </div>
         <div class="flex-1" />
         <button type="button" class="group self-start cursor-pointer" aria-label={gettext("close")}>
-          <.icon name="hero-x-mark" class="size-5 opacity-40 group-hover:opacity-70" />
+          <.icon name="x" class="size-5 opacity-40 group-hover:opacity-70" />
         </button>
       </div>
     </div>
@@ -297,7 +295,7 @@ defmodule PocaWeb.CoreComponents do
   defp error(assigns) do
     ~H"""
     <p class="mt-1.5 flex gap-2 items-center text-sm text-error">
-      <.icon name="hero-exclamation-circle" class="size-5" />
+      <.icon name="warning-circle" class="size-5" />
       {render_slot(@inner_block)}
     </p>
     """
@@ -417,29 +415,28 @@ defmodule PocaWeb.CoreComponents do
   end
 
   @doc """
-  Renders a [Heroicon](https://heroicons.com).
+  Renders a [Phosphor](https://phosphoricons.com).
 
-  Heroicons come in three styles – outline, solid, and mini.
-  By default, the outline style is used, but solid and mini may
-  be applied by using the `-solid` and `-mini` suffix.
+  Phosphor icons come in three styles – regular, bold, and duotone.
+  By default, the regular style is used, but bold and duotone may
+  be applied by using the `-bold` and `-duotone` suffix.
 
-  You can customize the size and colors of the icons by setting
+  You can customize the size, weight, and colors of the icons by setting
   width, height, and background color classes.
-
-  Icons are extracted from the `deps/heroicons` directory and bundled within
-  your compiled app.css by the plugin in `assets/vendor/heroicons.js`.
 
   ## Examples
 
-      <.icon name="hero-x-mark" />
-      <.icon name="hero-arrow-path" class="ml-1 size-3 motion-safe:animate-spin" />
+      <.icon name="x" />
+      <.icon name="arrow-clockwise" weight="bold" class="ml-1 size-3 motion-safe:animate-spin" />
   """
   attr :name, :string, required: true
-  attr :class, :any, default: "size-4"
+  attr :weight, :string, default: "regular"
+  attr :class, :string, default: "icon"
+  attr :rest, :global
 
-  def icon(%{name: "hero-" <> _} = assigns) do
+  def icon(assigns) do
     ~H"""
-    <span class={[@name, @class]} />
+    <Phosphor.icon name={@name} weight={@weight} class={@class} {@rest} />
     """
   end
 
