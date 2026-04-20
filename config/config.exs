@@ -2,7 +2,7 @@ import Config
 
 config :poca,
   ecto_repos: [Poca.Repo],
-  generators: [timestamp_type: :utc_datetime, binary_id: true]
+  generators: [timestamp_type: :utc_datetime_usec, binary_id: true]
 
 config :poca, PocaWeb.Endpoint,
   url: [host: "localhost"],
