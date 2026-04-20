@@ -8,7 +8,8 @@ defmodule Poca.Accounts do
 
   alias Poca.Accounts.{User, SocialAccount}
 
-  def get_user(id), do: Repo.get(User, id)
+  def get_user(nil), do: nil
+  def get_user(id), do: User |> where([u], u.id == ^id) |> Repo.one()
 
   def get_user_by_google_uid(uid) do
     User

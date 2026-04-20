@@ -35,4 +35,16 @@ defmodule PocaWeb.ConnCase do
     Poca.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
+
+  def register_and_login_user(%{conn: conn}) do
+    {:ok, user} = Poca.Accounts.signup_with_google("12345")
+
+    %{conn: login_user(conn, user), user: user}
+  end
+
+  def login_user(conn, user) do
+    conn
+    |> Phoenix.ConnTest.init_test_session(%{})
+    |> Plug.Conn.put_session(:user_id, user.id)
+  end
 end

@@ -1,6 +1,8 @@
 defmodule PocaWeb.Router do
   use PocaWeb, :router
 
+  import PocaWeb.UserAuth
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,6 +10,7 @@ defmodule PocaWeb.Router do
     plug :put_root_layout, html: {PocaWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_user
   end
 
   pipeline :api do
@@ -20,11 +23,20 @@ defmodule PocaWeb.Router do
     get "/", PageController, :home
   end
 
+  scope "/", PocaWeb do
+    pipe_through [:browser, :require_login]
+
+    live_session :require_login, on_mount: [{PocaWeb.UserAuth, :require_login}] do
+      live "/listen", PodcastLive.Listen, :index
+    end
+  end
+
   scope "/auth", PocaWeb do
     pipe_through :browser
 
     get "/:provider", AuthController, :request
     get "/:provider/callback", AuthController, :callback
+    delete "/logout", AuthController, :delete
   end
 
   # Other scopes may use custom stacks.
