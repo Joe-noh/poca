@@ -1,4 +1,4 @@
-defmodule PocaWeb.PodcastLive.Listen do
+defmodule PocaWeb.PodcastLive.Episode do
   use PocaWeb, :live_view
   use PocaWeb.Viewport
 
@@ -15,8 +15,11 @@ defmodule PocaWeb.PodcastLive.Listen do
           desktop
         </p>
       <% end %>
-      <.link navigate={~p"/episodes/3"} class="text-center text-sm text-ink/70 font-sans font-normal">
-        Open episode page
+      <p class="text-center text-sm text-ink/70 font-sans font-normal">
+        hello from episode page.
+      </p>
+      <.link navigate={~p"/listen"} class="text-center text-sm text-ink/70 font-sans font-normal">
+        back to listen page
       </.link>
     </Layouts.app>
     """

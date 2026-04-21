@@ -26,8 +26,9 @@ defmodule PocaWeb.Router do
   scope "/", PocaWeb do
     pipe_through [:browser, :require_login]
 
-    live_session :require_login, on_mount: [{PocaWeb.UserAuth, :require_login}] do
+    live_session :with_player, layout: {PocaWeb.PodcastLive, :with_player}, on_mount: [{PocaWeb.UserAuth, :require_login}, PocaWeb.PodcastLive] do
       live "/listen", PodcastLive.Listen
+      live "/episodes/:id", PodcastLive.Episode
     end
   end
 
