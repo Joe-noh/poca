@@ -1,5 +1,6 @@
 defmodule PocaWeb.Viewport do
-  @mobile_max_width 640 # Tailwind's "sm" breakpoint
+  # Tailwind's "sm" breakpoint
+  @mobile_max_width 640
 
   defmacro __using__(_) do
     quote do

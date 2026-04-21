@@ -18,8 +18,8 @@ const liveSocket = new LiveSocket("/live", Socket, {
     _csrf_token: csrfToken,
     viewport: {
       width: window.innerWidth,
-      height: window.innerHeight
-    }
+      height: window.innerHeight,
+    },
   },
   hooks: { ...colocatedHooks, ViewportResize },
 });

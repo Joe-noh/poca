@@ -16,3 +16,16 @@
 [data-phx-teleported-src] {
   display: contents;
 }
+
+@theme {
+  --color-paper: #f4f1ea;
+  --color-ink: #141311;
+  --color-ink2: #2b2925;
+  --color-muted: #8a8378;
+  --color-hairline: #d9d3c7;
+  --color-hairline2: #c9c1b1;
+  --color-paper-hover: #ece6d5;
+  --font-sans: "Noto Sans JP", -apple-system, sans-serif;
+  --font-serif: "Noto Serif JP", Georgia, serif;
+  --font-mono: "Noto Sans Mono", Consolas, Courier, monospace;
+}

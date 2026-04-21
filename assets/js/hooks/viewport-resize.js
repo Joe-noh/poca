@@ -1,18 +1,18 @@
-import { debounce } from 'es-toolkit'
+import { debounce } from "es-toolkit";
 
 export const ViewportResize = {
   mounted() {
-    this.pushResizeEvent()
+    this.pushResizeEvent();
 
-    const resizeHandler = debounce(() => this.pushResizeEvent(), 100)
+    const resizeHandler = debounce(() => this.pushResizeEvent(), 100);
 
-    window.addEventListener('resize', resizeHandler)
+    window.addEventListener("resize", resizeHandler);
   },
 
   pushResizeEvent() {
-    this.pushEvent('viewport_resize', {
+    this.pushEvent("viewport_resize", {
       width: window.innerWidth,
-      height: window.innerHeight
-    })
-  }
-}
+      height: window.innerHeight,
+    });
+  },
+};

@@ -7,11 +7,11 @@ defmodule PocaWeb.PodcastLive.Listen do
     ~H"""
     <Layouts.app flash={@flash}>
       <%= if @device == :mobile do %>
-        <p class="text-center text-sm text-gray-500">
+        <p class="text-center text-lg text-ink font-sans font-normal">
           mobile
         </p>
       <% else %>
-        <p class="text-center text-sm text-gray-500">
+        <p class="text-center text-lg text-ink font-serif font-normal">
           desktop
         </p>
       <% end %>
