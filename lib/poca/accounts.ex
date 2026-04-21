@@ -30,9 +30,9 @@ defmodule Poca.Accounts do
 
   defp do_signup_with_google(uid) do
     Repo.transact(fn ->
-      with {:ok, user} = User.changeset(%User{}, %{}) |> Repo.insert(),
+      with {:ok, user} <- User.changeset(%User{}, %{}) |> Repo.insert(),
            changeset = user |> Ecto.build_assoc(:social_accounts) |> SocialAccount.changeset(%{provider: "google", uid: uid}),
-           {:ok, _account} = Repo.insert(changeset) do
+           {:ok, _account} <- Repo.insert(changeset) do
         {:ok, user}
       end
     end)

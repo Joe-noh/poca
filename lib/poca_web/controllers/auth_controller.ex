@@ -12,8 +12,9 @@ defmodule PocaWeb.AuthController do
   end
 
   def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
-    with %Ueberauth.Auth{provider: :google, uid: uid} = auth,
-         {:ok, user} <- Accounts.signup_with_google(uid) do
+    %Ueberauth.Auth{provider: :google, uid: uid} = auth
+
+    with {:ok, user} <- Accounts.signup_with_google(uid) do
       conn |> UserAuth.login_user(user)
     end
   end

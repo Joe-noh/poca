@@ -1,4 +1,8 @@
 defmodule PocaWeb.UserAuth do
+  @moduledoc """
+  This module provides authentication and session management functions
+  """
+
   use PocaWeb, :verified_routes
 
   alias Poca.Accounts

@@ -12,9 +12,6 @@ defmodule PocaWeb.PodcastLive.Listen do
 
   @impl true
   def mount(_params, _session, socket) do
-    user = socket.assigns.current_user
-    IO.inspect(user)
-
     {:ok, socket}
   end
 end
