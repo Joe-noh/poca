@@ -24,7 +24,10 @@ defmodule Poca.MixProject do
 
   def cli do
     [
-      preferred_envs: [precommit: :test]
+      preferred_envs: [
+        precommit: :test,
+        "test.watch": :test
+      ]
     ]
   end
 
@@ -51,7 +54,9 @@ defmodule Poca.MixProject do
       {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:lazy_html, ">= 0.1.0", only: :test}
+      {:lazy_html, ">= 0.1.0", only: :test},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:mix_test_watch, "~> 1.4", only: [:dev, :test], runtime: false}
     ]
   end
 
