@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 4bqfm85SYoKQh7f6O5IFDPqvlZ5VABrAbnqU3wc3lGkmhWFR5nzK3K5OrQJLLNc
+\restrict EMMJHjz9eUa9ec1fqND1RvBdtWrZOdltAhaPVSQbuDmpUdLfj4wtAygwYfU5Ieg
 
 -- Dumped from database version 18.3 (Debian 18.3-1.pgdg13+1)
 -- Dumped by pg_dump version 18.3 (Homebrew)
@@ -108,7 +108,7 @@ ALTER TABLE ONLY public.social_accounts
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 4bqfm85SYoKQh7f6O5IFDPqvlZ5VABrAbnqU3wc3lGkmhWFR5nzK3K5OrQJLLNc
+\unrestrict EMMJHjz9eUa9ec1fqND1RvBdtWrZOdltAhaPVSQbuDmpUdLfj4wtAygwYfU5Ieg
 
 INSERT INTO public."schema_migrations" (version) VALUES (20260420141912);
 INSERT INTO public."schema_migrations" (version) VALUES (20260420142501);
