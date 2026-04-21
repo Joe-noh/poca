@@ -2,19 +2,26 @@
 // to get started and then uncomment the line below.
 // import "./user_socket.js"
 
+import topbar from "topbar";
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html";
 // Establish Phoenix Socket and LiveView configuration.
 import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import { hooks as colocatedHooks } from "phoenix-colocated/poca";
-import topbar from "topbar";
+import { ViewportResize } from "./hooks/viewport-resize";
 
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
 const liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
-  params: { _csrf_token: csrfToken },
-  hooks: { ...colocatedHooks },
+  params: {
+    _csrf_token: csrfToken,
+    viewport: {
+      width: window.innerWidth,
+      height: window.innerHeight
+    }
+  },
+  hooks: { ...colocatedHooks, ViewportResize },
 });
 
 // Show progress bar on live navigation and form submits

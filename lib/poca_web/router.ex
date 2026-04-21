@@ -27,7 +27,7 @@ defmodule PocaWeb.Router do
     pipe_through [:browser, :require_login]
 
     live_session :require_login, on_mount: [{PocaWeb.UserAuth, :require_login}] do
-      live "/listen", PodcastLive.Listen, :index
+      live "/listen", PodcastLive.Listen
     end
   end
 

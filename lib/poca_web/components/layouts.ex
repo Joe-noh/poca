@@ -34,7 +34,6 @@ defmodule PocaWeb.Layouts do
     <main>
       {render_slot(@inner_block)}
     </main>
-
     <.flash_group flash={@flash} />
     """
   end
