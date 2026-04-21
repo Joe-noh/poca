@@ -10,7 +10,13 @@ config :poca, Poca.Repo,
   pool_size: 10
 
 config :poca, PocaWeb.Endpoint,
-  http: [ip: {127, 0, 0, 1}],
+  https: [
+    ip: {127, 0, 0, 1},
+    port: 4000,
+    cipher_suite: :strong,
+    keyfile: "priv/cert/selfsigned_key.pem",
+    certfile: "priv/cert/selfsigned.pem"
+  ],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
@@ -63,3 +69,5 @@ config :phoenix_live_view,
   debug_heex_annotations: true,
   debug_attributes: true,
   enable_expensive_runtime_checks: true
+
+import_config "dev.secret.exs"

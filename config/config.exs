@@ -2,7 +2,7 @@ import Config
 
 config :poca,
   ecto_repos: [Poca.Repo],
-  generators: [timestamp_type: :utc_datetime, binary_id: true]
+  generators: [timestamp_type: :utc_datetime_usec, binary_id: true]
 
 config :poca, PocaWeb.Endpoint,
   url: [host: "localhost"],
@@ -13,6 +13,11 @@ config :poca, PocaWeb.Endpoint,
   ],
   pubsub_server: Poca.PubSub,
   live_view: [signing_salt: "egJFWTJZ"]
+
+config :ueberauth, Ueberauth,
+  providers: [
+    google: {Ueberauth.Strategy.Google, []}
+  ]
 
 config :esbuild,
   version: "0.25.4",
