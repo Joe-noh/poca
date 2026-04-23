@@ -35,17 +35,26 @@ defmodule PocaWeb.Components do
   def sidebar(assigns) do
     ~H"""
     <aside class="flex flex-col gap-7 row-span-2 border-r border-hairline p-7">
-      <.link navigate={"/"}>
-        <img src="/images/logo.svg" alt="POCA" class="w-8 h-8 mb-6" />
+      <.link navigate="/" class="w-8 h-8 mb-6">
+        <img src="/images/logo.svg" alt="POCA" class="w-full h-full" />
       </.link>
       <div class="flex flex-col gap-2.5">
-        <.link :for={item <- @item} navigate={item.to} class={["flex flex-row items-center justify-start gap-4 px-3 py-2.5 rounded-lg hover:bg-hairline transition-colors", Map.get(item, :active) && "bg-ink"]}>
-          <div :if={Map.get(item, :active)} class="bg-paper w-1 h-1 rounded-full" />
-          <div :if={!Map.get(item, :active)} class="bg-muted w-1 h-1 rounded-full" />
-          <.text font="sans" size="sm" color={if Map.get(item, :active), do: "paper", else: "ink"}>{item.label}</.text>
-        </.link>
+        <.sidebar_entry :for={item <- @item} to={item.to} active={Map.get(item, :active)} label={item.label} />
       </div>
     </aside>
+    """
+  end
+
+  def sidebar_entry(assigns) do
+    ~H"""
+    <.link
+      navigate={@to}
+      class={["group flex flex-row items-center justify-start gap-4 px-3 py-2.5 rounded-md hover:bg-hairline transition-colors", @active && "bg-ink hover:text-muted"]}
+    >
+      <div :if={@active} class="bg-paper w-1 h-1 rounded-full group-hover:bg-muted" />
+      <div :if={!@active} class="bg-muted w-1 h-1 rounded-full" />
+      <span class={["font-sans text-sm text-ink tracking-wide transition-colors", @active && "text-paper group-hover:text-ink"]}>{@label}</span>
+    </.link>
     """
   end
 end

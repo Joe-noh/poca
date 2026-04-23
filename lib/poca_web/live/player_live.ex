@@ -4,7 +4,11 @@ defmodule PocaWeb.PlayerLive do
 
   def render(assigns) do
     ~H"""
-    <div id="global-player" class="grid grid-cols-[44px_1fr_auto] absolute bottom-20 left-3 right-3 border border-hairline px-2.5 py-2 z-50 shadow-[0_4px_16px_rgba(0,0,0,0.08)]" phx-hook=".GlobalPlayer">
+    <div
+      id="global-player"
+      class="grid grid-cols-[44px_1fr_auto] absolute bottom-20 left-3 right-3 border border-hairline px-2.5 py-2 z-50 shadow-[0_4px_16px_rgba(0,0,0,0.08)]"
+      phx-hook=".GlobalPlayer"
+    >
       <div>
         <img />
       </div>
