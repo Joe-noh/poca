@@ -54,6 +54,10 @@ defmodule PocaWeb.Router do
     # as long as you are also using SSL (which you should anyway).
     import Phoenix.LiveDashboard.Router
 
+    scope "/", PocaWeb do
+      get "/.well-known/appspecific/com.chrome.devtools.json", PageController, :chrome_devtools
+    end
+
     scope "/dev" do
       pipe_through :browser
 
