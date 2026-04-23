@@ -5,16 +5,7 @@ defmodule PocaWeb.PodcastLive.Listen do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash}>
-      <%= if @device == :mobile do %>
-        <p class="text-center text-lg text-ink font-sans font-normal">
-          mobile
-        </p>
-      <% else %>
-        <p class="text-center text-lg text-ink font-serif font-normal">
-          desktop
-        </p>
-      <% end %>
+    <Layouts.app device={@device} active_tab={@active_tab} flash={@flash}>
       <.link navigate={~p"/episodes/3"} class="text-center text-sm text-ink/70 font-sans font-normal">
         Open episode page
       </.link>

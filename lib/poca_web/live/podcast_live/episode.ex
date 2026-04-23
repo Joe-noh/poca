@@ -5,7 +5,7 @@ defmodule PocaWeb.PodcastLive.Episode do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash}>
+    <Layouts.app device={@device} active_tab={@active_tab} flash={@flash}>
       <%= if @device == :mobile do %>
         <p class="text-center text-lg text-ink font-sans font-normal">
           mobile

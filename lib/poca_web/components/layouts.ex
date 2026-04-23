@@ -20,18 +20,36 @@ defmodule PocaWeb.Layouts do
 
   ## Examples
 
-      <Layouts.app flash={@flash}>
+      <Layouts.app flash={@flash} device={@device} active_tab={@active_tab}>
         <h1>Content</h1>
       </Layouts.app>
 
   """
+  attr :device, :atom, required: true, doc: "the device type, either :mobile or :desktop"
+  attr :active_tab, :atom, required: true, doc: "the active tab in the sidebar or tabbar"
   attr :flash, :map, required: true, doc: "the map of flash messages"
+  attr :entries, :list, default: [], doc: "the list of sidebar entries"
 
   slot :inner_block, required: true
 
   def app(assigns) do
     ~H"""
-    <main>
+    <main class="grid sm:grid-cols-[240px_1fr] sm:grid-rows-[1fr_88px] w-screen h-screen">
+      <%= if @device == :mobile do %>
+        <.tabbar>
+          <:item label="HOME" to={~p"/listen"} active={@active_tab == :home} />
+          <:item label="LIBRARY" to={~p"/library"} active={@active_tab == :library} />
+          <:item label="QUEUE" to={~p"/queue"} active={@active_tab == :queue} />
+          <:item label="SEARCH" to={~p"/search"} active={@active_tab == :search} />
+        </.tabbar>
+      <% else %>
+        <.sidebar entries={@entries}>
+          <:item label="HOME" to={~p"/listen"} active={@active_tab == :home} />
+          <:item label="LIBRARY" to={~p"/library"} active={@active_tab == :library} />
+          <:item label="QUEUE" to={~p"/queue"} active={@active_tab == :queue} />
+          <:item label="SEARCH" to={~p"/search"} active={@active_tab == :search} />
+        </.sidebar>
+      <% end %>
       {render_slot(@inner_block)}
     </main>
     <.flash_group flash={@flash} />

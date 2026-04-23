@@ -4,16 +4,18 @@ defmodule PocaWeb.PlayerLive do
 
   def render(assigns) do
     ~H"""
-    <div id="global-player" class="fixed bottom-0 left-0 right-0 z-50" phx-hook=".GlobalPlayer">
+    <div id="global-player" class="grid grid-cols-[44px_1fr_auto] absolute bottom-20 left-3 right-3 border border-hairline px-2.5 py-2 z-50 shadow-[0_4px_16px_rgba(0,0,0,0.08)]" phx-hook=".GlobalPlayer">
+      <div>
+        <img />
+      </div>
+      <div>
+        <p class="text-sm text-center text-base-content/70">Global Player</p>
+      </div>
       <div class="bg-base-100 border-t border-base-content/10">
-        <div class="container mx-auto px-4 py-2">
-          <p class="text-sm text-center text-base-content/70">Global Player Placeholder</p>
-          <audio control class="w-full mt-2" />
-        </div>
+        <audio control class="w-full mt-2" />
       </div>
     </div>
     <script :type={Phoenix.LiveView.ColocatedHook} name=".GlobalPlayer">
-      // Example JavaScript to handle global player interactions
       document.addEventListener('DOMContentLoaded', () => {
         let count = 0;
         const player = document.getElementById('global-player');
@@ -21,7 +23,7 @@ defmodule PocaWeb.PlayerLive do
         setInterval(() => {
           count += 1;
           console.log(`Global Player Count: ${count}`);
-        }, 1000);
+        }, 10000);
       });
     </script>
     """

@@ -15,21 +15,7 @@
     <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
     </script>
   </head>
-  <body class="bg-paper min-h-screen">
-    <ul class="menu menu-horizontal w-full relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
-      <%= if @current_user do %>
-        <li>
-          {@current_user.id}
-        </li>
-        <li>
-          <.link href={~p"/auth/logout"} method="delete">Log out</.link>
-        </li>
-      <% else %>
-        <li>
-          <.link href={~p"/auth/google"}>Log in</.link>
-        </li>
-      <% end %>
-    </ul>
+  <body class="bg-paper text-ink min-h-screen">
     {@inner_content}
   </body>
 </html>

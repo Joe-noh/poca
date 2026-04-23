@@ -28,4 +28,6 @@
   --font-sans: "Noto Sans JP", -apple-system, sans-serif;
   --font-serif: "Noto Serif JP", Georgia, serif;
   --font-mono: "Noto Sans Mono", Consolas, Courier, monospace;
+  --text-xs: 9px;
+  --text-sm: 11px;
 }
