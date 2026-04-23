@@ -79,6 +79,7 @@ defmodule PocaWeb do
 
       import Phoenix.HTML
       import PocaWeb.CoreComponents
+      import PocaWeb.Components
 
       alias Phoenix.LiveView.JS
       alias PocaWeb.Layouts

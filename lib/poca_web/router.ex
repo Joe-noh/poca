@@ -26,8 +26,9 @@ defmodule PocaWeb.Router do
   scope "/", PocaWeb do
     pipe_through [:browser, :require_login]
 
-    live_session :require_login, on_mount: [{PocaWeb.UserAuth, :require_login}] do
-      live "/listen", PodcastLive.Listen, :index
+    live_session :with_player, layout: {PocaWeb.PodcastLive, :with_player}, on_mount: [{PocaWeb.UserAuth, :require_login}, PocaWeb.PodcastLive] do
+      live "/listen", PodcastLive.Listen
+      live "/episodes/:id", PodcastLive.Episode
     end
   end
 
@@ -52,6 +53,10 @@ defmodule PocaWeb.Router do
     # you can use Plug.BasicAuth to set up some basic authentication
     # as long as you are also using SSL (which you should anyway).
     import Phoenix.LiveDashboard.Router
+
+    scope "/", PocaWeb do
+      get "/.well-known/appspecific/com.chrome.devtools.json", PageController, :chrome_devtools
+    end
 
     scope "/dev" do
       pipe_through :browser

@@ -1,0 +1,42 @@
+defmodule PocaWeb.Viewport do
+  @moduledoc """
+  Provides an event handler for tracking the viewport size and assigning a device type to the socket.
+  `use` this in each live views.
+
+      use PocaWeb.Viewport
+  """
+
+  defmacro __using__(_) do
+    quote do
+      def handle_event("viewport_resize", viewport, socket) do
+        socket =
+          if connected?(socket) do
+            device = viewport |> Map.get("width") |> PocaWeb.Viewport.device_type()
+            Phoenix.Component.assign(socket, :device, device)
+          else
+            socket
+          end
+
+        {:noreply, socket}
+      end
+    end
+  end
+
+  def assign_device(socket) do
+    device =
+      socket.private
+      |> get_in([:connect_params, "viewport", "width"])
+      |> PocaWeb.Viewport.device_type()
+
+    Phoenix.Component.assign(socket, :device, device)
+  end
+
+  def device_type(width) do
+    # Tailwind's "sm" breakpoint
+    if is_integer(width) and width > 640 do
+      :desktop
+    else
+      :mobile
+    end
+  end
+end

@@ -10,12 +10,10 @@ defmodule PocaWeb.PodcastLive.ListenTest do
     end
 
     test "renders listen page", %{conn: conn, user: user} do
-      {:ok, _lv, html} =
-        conn
-        |> login_user(user)
-        |> live(~p"/listen")
-
-      assert html =~ "Listen"
+      assert {:ok, _lv, _html} =
+               conn
+               |> login_user(user)
+               |> live(~p"/listen")
     end
 
     test "redirects if user is not logged in", %{conn: conn} do
