@@ -8,12 +8,11 @@ defmodule Poca.Podcasts.Itunes do
       :artwork_url_600,
       :collection_id,
       :collection_name,
-      :collection_price,
       :feed_url,
       :genres,
       :kind,
       :primary_genre_name,
-      :track_count,
+      :track_count
     ]
   end
 
@@ -49,7 +48,6 @@ defmodule Poca.Podcasts.Itunes do
       artwork_url_600: entry["artworkUrl600"],
       collection_id: entry["collectionId"],
       collection_name: entry["collectionName"],
-      collection_price: entry["collectionPrice"],
       feed_url: entry["feedUrl"],
       genres: entry["genres"],
       kind: entry["kind"],

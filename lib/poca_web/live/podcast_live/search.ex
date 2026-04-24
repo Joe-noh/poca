@@ -17,7 +17,7 @@ defmodule PocaWeb.PodcastLive.Search do
         <%= if @result do %>
           <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-8 p-8">
             <%= for entry <- @result do %>
-              <div class="flex flex-col">
+              <div class="flex flex-col cursor-pointer" phx-click="open_podcast" phx-value-url={entry.feed_url}>
                 <img src={entry.artwork_url_600} alt={entry.collection_name} class="w-full aspect-square object-cover mb-2 rounded-md" />
                 <p class="font-bold font-sans text-ink mb-1 truncate">{entry.collection_name}</p>
                 <p class="text-sm font-sans text-muted truncate">{entry.artist_name}</p>
@@ -58,6 +58,13 @@ defmodule PocaWeb.PodcastLive.Search do
   @impl true
   def handle_event("search", %{"query" => query}, socket) do
     {:noreply, push_navigate(socket, to: "/search?query=#{query}")}
+  end
+
+  @impl true
+  def handle_event("open_podcast", %{"url" => url}, socket) do
+    IO.inspect(url)
+
+    {:noreply, push_navigate(socket, to: "/search")}
   end
 
   @impl true

@@ -33,6 +33,7 @@ defmodule PocaWeb.Components do
 
   @doc "Desktop sidebar component"
   attr :entries, :list
+
   slot :item, required: true do
     attr :label, :string
     attr :to, :string
