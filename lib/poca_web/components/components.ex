@@ -69,7 +69,7 @@ defmodule PocaWeb.Components do
 
   def search_input(assigns) do
     ~H"""
-    <.form for={@form} id="search-form" phx-submit="search" class="flex items-center border-b pl-2 border-hairline focus-within:border-ink">
+    <.form for={@form} id="search-form" phx-submit="search" class="flex items-center border-b pl-2 border-hairline focus-within:border-ink" phx-hook=".SearchInput">
       <.icon name="magnifying-glass" class="text-muted w-4 h-4" />
       <input
         type="text"
@@ -79,6 +79,17 @@ defmodule PocaWeb.Components do
         class="flex-1 text-ink font-sans font-normal p-2 focus:outline-none placeholder:text-muted"
       />
     </.form>
+    <script :type={Phoenix.LiveView.ColocatedHook} name=".SearchInput">
+      export default {
+        mounted() {
+          const input = this.el.querySelector('input[name="query"]');
+
+          if (input.value === '') {
+            input.focus();
+          }
+        }
+      };
+    </script>
     """
   end
 end
