@@ -28,6 +28,7 @@ defmodule PocaWeb.PodcastLive do
     active_tab =
       case {socket.view, socket.assigns.live_action} do
         {PocaWeb.PodcastLive.Listen, _} -> :home
+        {PocaWeb.PodcastLive.Search, _} -> :search
         {_, _} -> nil
       end
 

@@ -31,12 +31,14 @@ defmodule PocaWeb.Viewport do
     Phoenix.Component.assign(socket, :device, device)
   end
 
-  def device_type(width) do
+  def device_type(width) when is_integer(width) do
     # Tailwind's "sm" breakpoint
-    if is_integer(width) and width > 640 do
+    if width > 640 do
       :desktop
     else
       :mobile
     end
   end
+
+  def device_type(_), do: nil
 end

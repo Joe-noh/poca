@@ -48,6 +48,7 @@ defmodule Poca.MixProject do
       {:phoenix_live_view, "~> 1.1.0"},
       {:phosphor_live_view, "~> 2.1"},
       {:postgrex, ">= 0.0.0"},
+      {:req, "~> 0.5"},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
       {:ueberauth_google, "~> 0.12"},

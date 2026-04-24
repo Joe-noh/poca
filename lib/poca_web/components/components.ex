@@ -16,16 +16,23 @@ defmodule PocaWeb.Components do
 
   def tabbar(assigns) do
     ~H"""
-    <div class="grid grid-cols-4 absolute bottom-0 left-0 right-0 bg-paper backdrop-blur-lg border-t border-hairline pt-2.5 pb-2 px-2">
-      <.link :for={item <- @item} navigate={item.to} class="flex flex-col justify-center items-center pb-4 w-full">
-        <div class={[Map.get(item, :active) && "bg-ink", "w-1 h-1 rounded-full mb-1 mx-auto"]} />
-        <.text font="sans" size="sm" color={if Map.get(item, :active), do: "ink", else: "muted"}>{item.label}</.text>
-      </.link>
+    <div class="grid grid-cols-4 fixed bottom-0 left-0 right-0 bg-paper backdrop-blur-lg border-t border-hairline pt-2.5 pb-2 px-2">
+      <.tabbar_entry :for={item <- @item} to={item.to} active={Map.get(item, :active)} label={item.label} />
     </div>
     """
   end
 
+  defp tabbar_entry(assigns) do
+    ~H"""
+    <.link navigate={@to} class={["flex flex-col justify-center items-center pb-4 w-full"]}>
+      <div class={["w-1 h-1 rounded-full mb-1 mx-auto", @active && "bg-ink"]} />
+      <span class={["font-sans text-sm tracking-wide transition-colors", if(@active, do: "text-ink", else: "text-muted")]}>{@label}</span>
+    </.link>
+    """
+  end
+
   @doc "Desktop sidebar component"
+  attr :entries, :list
   slot :item, required: true do
     attr :label, :string
     attr :to, :string
@@ -45,7 +52,7 @@ defmodule PocaWeb.Components do
     """
   end
 
-  def sidebar_entry(assigns) do
+  defp sidebar_entry(assigns) do
     ~H"""
     <.link
       navigate={@to}
@@ -55,6 +62,23 @@ defmodule PocaWeb.Components do
       <div :if={!@active} class="bg-muted w-1 h-1 rounded-full" />
       <span class={["font-sans text-sm text-ink tracking-wide transition-colors", @active && "text-paper group-hover:text-ink"]}>{@label}</span>
     </.link>
+    """
+  end
+
+  attr :form, Phoenix.HTML.Form, required: true
+
+  def search_input(assigns) do
+    ~H"""
+    <.form for={@form} id="search-form" phx-submit="search" class="flex items-center border-b pl-2 border-hairline focus-within:border-ink">
+      <.icon name="magnifying-glass" class="text-muted w-4 h-4" />
+      <input
+        type="text"
+        name="query"
+        inputmode="search"
+        value={Phoenix.HTML.Form.normalize_value("text", @form[:query][:value])}
+        class="flex-1 text-ink font-sans font-normal p-2 focus:outline-none placeholder:text-muted"
+      />
+    </.form>
     """
   end
 end
