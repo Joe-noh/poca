@@ -39,6 +39,7 @@ defmodule Poca.MixProject do
       {:bandit, "~> 1.5"},
       {:dns_cluster, "~> 0.2.0"},
       {:ecto_sql, "~> 3.13"},
+      {:fast_rss, "~> 0.5"},
       {:gettext, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:phoenix, "~> 1.8.5"},

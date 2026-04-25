@@ -21,5 +21,6 @@ defmodule Poca.Podcasts.Podcast do
     podcast
     |> cast(attrs, [:title, :author, :description, :link, :feed_url, :artwork_url, :last_fetched_at])
     |> validate_required([:feed_url])
+    |> unique_constraint(:feed_url, name: "podcasts_feed_url_index")
   end
 end
