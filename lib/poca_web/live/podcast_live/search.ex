@@ -33,15 +33,31 @@ defmodule PocaWeb.PodcastLive.Search do
         </:loading>
       </.async_result>
       <div
-        :if={@selected}
+        :if={@podcast.loading || @podcast.result}
         id="podcast-modal"
-        class="sticky bottom-0 right-0 left-0 h-1/3 bg-paper backdrop-blur-md border-t border-hairline transition-all duration-200 animate-slide-in starting:translate-y-full"
+        class={[
+          "sticky bottom-0 right-0 left-0 h-1/2 pb-12 bg-paper border-t border-hairline overflow-y-auto",
+          "transition-all duration-200 animate-slide-in starting:translate-y-full"
+        ]}
       >
         <.async_result :let={podcast} assign={@podcast}>
-          <div :if={podcast} class="bg-paper p-8 w-full max-w-md">
-            <h2 class="text-xl font-bold mb-4">{podcast.title}</h2>
-            <p class="mb-4">{podcast.author}</p>
-            <p class="mb-4">{podcast.feed_url}</p>
+          <div :if={podcast} class="flex flex-col gap-2 bg-paper p-8 w-full">
+            <div class="grid grid-cols-[1fr_30px] grid-rows-1 gap-2 w-full">
+              <div class="flex flex-col gap-1 flex-1 overflow-hidden">
+                <h2 class="text-xl font-bold w-full">{podcast.title}</h2>
+                <p class="font-sans text-sm text-muted">{podcast.author}</p>
+              </div>
+              <%= if length(podcast.subscribers) == 0 do %>
+                <button class="flex items-center justify-center bg-paper border border-muted rounded-full p-2 w-8 h-8 cursor-pointer hover:bg-hairline" phx-click="subscribe" phx-value-id={podcast.id}>
+                  <.icon name="plus" class="text-ink w-5 h-5" />
+                </button>
+              <% else %>
+                <button class="flex items-center justify-center bg-ink rounded-full p-2 w-8 h-8 cursor-pointer hover:bg-muted" phx-click="unsubscribe" phx-value-id={podcast.id}>
+                  <.icon name="check" class="text-paper w-5 h-5" />
+                </button>
+              <% end %>
+            </div>
+            <p class="whitespace-pre-wrap leading-relaxed overflow-hidden">{podcast.description}</p>
           </div>
           <:loading>
             <div class="flex items-center justify-center w-full p-8">
@@ -58,7 +74,6 @@ defmodule PocaWeb.PodcastLive.Search do
   def mount(%{"query" => query}, _session, socket) do
     socket =
       socket
-      |> assign(:selected, nil)
       |> assign(:form, to_form(%{"query" => query}))
       |> assign_async(:podcast, fn -> {:ok, %{podcast: nil}} end)
       |> assign_async(:result, fn ->
@@ -74,7 +89,6 @@ defmodule PocaWeb.PodcastLive.Search do
   def mount(_params, _session, socket) do
     socket =
       socket
-      |> assign(:selected, nil)
       |> assign(:form, to_form(%{"query" => ""}))
       |> assign_async(:podcast, fn -> {:ok, %{podcast: nil}} end)
       |> assign_async(:result, fn -> {:ok, %{result: []}} end)
@@ -87,15 +101,16 @@ defmodule PocaWeb.PodcastLive.Search do
     {:noreply, push_navigate(socket, to: "/search?query=#{query}")}
   end
 
-  @impl true
   def handle_event("open_podcast", %{"url" => url}, socket) do
+    current_user = socket.assigns.current_user
+
     socket =
       socket
-      |> assign(:selected, true)
       |> assign_async(:podcast, fn ->
         with {:ok, %{podcast: podcast}} <- Podcasts.create_podcast(%{feed_url: url}),
-             {:ok, %{podcast: podcast}} <- Podcasts.refresh_podcast(podcast),
-             {:ok, _feed} <- Podcasts.refresh_episodes(podcast) do
+             {:ok, %{podcast: podcast}} <- Podcasts.refresh_podcast(podcast) do
+          podcast = Podcasts.get_podcast(podcast.id, user: current_user)
+
           {:ok, %{podcast: podcast}}
         else
           _error ->
@@ -104,5 +119,53 @@ defmodule PocaWeb.PodcastLive.Search do
       end)
 
     {:noreply, socket}
+  end
+
+  def handle_event("subscribe", %{"id" => id}, socket) do
+    case Podcasts.get_podcast(id) do
+      nil ->
+        {:noreply, socket}
+
+      podcast ->
+        current_user = socket.assigns.current_user
+
+        case Podcasts.subscribe(podcast, current_user) do
+          {:ok, _} ->
+            socket = assign_async(socket, :podcast, fn ->
+              podcast = Podcasts.get_podcast(id, user: current_user)
+
+              {:ok, %{podcast: podcast}}
+            end)
+
+            {:noreply, socket}
+
+          _ ->
+            {:noreply, socket}
+        end
+    end
+  end
+
+  def handle_event("unsubscribe", %{"id" => id}, socket) do
+    case Podcasts.get_podcast(id) do
+      nil ->
+        {:noreply, socket}
+
+      podcast ->
+        current_user = socket.assigns.current_user
+
+        case Podcasts.unsubscribe(podcast, current_user) do
+          {:ok, _} ->
+            socket = assign_async(socket, :podcast, fn ->
+              podcast = Podcasts.get_podcast(id, user: current_user)
+
+              {:ok, %{podcast: podcast}}
+            end)
+
+            {:noreply, socket}
+
+          _ ->
+            {:noreply, socket}
+        end
+    end
   end
 end

@@ -7,7 +7,8 @@ defmodule Poca.Podcasts do
 
   alias Ecto.Multi
   alias Poca.Repo
-  alias Poca.Podcasts.Podcast
+  alias Poca.Podcasts.{Podcast, Subscription}
+  alias Poca.Accounts.User
 
   @doc """
   Returns the list of podcasts.
@@ -22,8 +23,35 @@ defmodule Poca.Podcasts do
     Repo.all(Podcast)
   end
 
-  def get_podcast(id), do: Podcast |> where([p], p.id == ^id) |> Repo.one()
-  def get_podcast_by_feed_url(feed_url), do: Podcast |> where([p], p.feed_url == ^feed_url) |> Repo.one()
+  def get_podcast(id, opts \\ []) do
+    query = Podcast |> where([p], p.id == ^id)
+
+    query =
+      case Keyword.get(opts, :user) do
+        user = %User{} -> preload_subscribers(query, user)
+        nil -> query
+      end
+
+    Repo.one(query)
+  end
+
+  def get_podcast_by_feed_url(feed_url, opts \\ []) do
+    query = Podcast |> where([p], p.feed_url == ^feed_url)
+
+    query =
+      case Keyword.get(opts, :user) do
+        user = %User{} -> preload_subscribers(query, user)
+        nil -> query
+      end
+
+    Repo.one(query)
+  end
+
+  defp preload_subscribers(query, %User{id: user_id}) do
+    query
+    |> join(:left, [p], s in assoc(p, :subscribers), on: s.id == ^user_id, as: :subscribers)
+    |> preload([p, subscribers: s], subscribers: s)
+  end
 
   def create_podcast(attrs \\ %{}) do
     case get_podcast_by_feed_url(attrs["feed_url"] || attrs[:feed_url]) do
@@ -31,7 +59,6 @@ defmodule Poca.Podcasts do
         Multi.new()
         |> Multi.insert(:podcast, Podcast.changeset(%Podcast{}, attrs), returning: true, on_conflict: :nothing, conflict_target: :feed_url)
         |> Repo.transact()
-        |> IO.inspect()
 
       podcast ->
         {:ok, %{podcast: podcast}}
@@ -90,5 +117,25 @@ defmodule Poca.Podcasts do
       {:error, reason} ->
         {:error, reason}
     end
+  end
+
+  @doc """
+  Subscribes a user to a podcast. Do nothing if the user is already subscribed.
+  """
+  def subscribe(%Podcast{} = podcast, user) do
+    changeset = Subscription.changeset(%Subscription{user_id: user.id, podcast_id: podcast.id}, %{})
+
+    Multi.new()
+    |> Multi.insert(:subscription, changeset, on_conflict: :nothing)
+    |> Repo.transact()
+  end
+
+  @doc """
+  Unsubscribes a user from a podcast. Do nothing if the user is not subscribed.
+  """
+  def unsubscribe(%Podcast{} = podcast, user) do
+    Multi.new()
+    |> Multi.delete_all(:subscription, from(s in Subscription, where: s.user_id == ^user.id and s.podcast_id == ^podcast.id))
+    |> Repo.transact()
   end
 end

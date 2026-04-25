@@ -13,6 +13,9 @@ defmodule Poca.Podcasts.Podcast do
     field :artwork_url, :string
     field :last_fetched_at, :utc_datetime_usec
 
+    has_many :subscriptions, Poca.Podcasts.Subscription
+    has_many :subscribers, through: [:subscriptions, :user]
+
     timestamps(type: :utc_datetime_usec)
   end
 
