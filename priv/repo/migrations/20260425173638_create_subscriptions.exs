@@ -4,8 +4,8 @@ defmodule Poca.Repo.Migrations.CreateSubscriptions do
   def change do
     create table(:subscriptions, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :user_id, references(:users, on_delete: :nothing, type: :binary_id)
-      add :podcast_id, references(:podcasts, on_delete: :nothing, type: :binary_id)
+      add :user_id, references(:users, on_delete: :nothing, type: :binary_id), null: false
+      add :podcast_id, references(:podcasts, on_delete: :nothing, type: :binary_id), null: false
 
       timestamps(type: :utc_datetime_usec)
     end

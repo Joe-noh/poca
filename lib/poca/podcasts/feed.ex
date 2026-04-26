@@ -29,4 +29,22 @@ defmodule Poca.Podcasts.Feed do
     |> Keyword.merge(Application.get_env(:poca, :feed_req_opts, []))
     |> Req.request()
   end
+
+  def parse_pub_date(pub_date) do
+    pub_date
+    |> DateTimeParser.parse_datetime!()
+    |> Map.put(:microsecond, {0, 6})
+    |> DateTime.from_naive!("Etc/UTC")
+  end
+
+  def parse_duration(duration) when is_binary(duration) do
+    String.split(duration, ":")
+    |> Enum.map(&String.to_integer/1)
+    |> case do
+      [h, m, s] -> h * 3600 + m * 60 + s
+      [m, s] -> m * 60 + s
+      [s] -> s
+      _ -> nil
+    end
+  end
 end

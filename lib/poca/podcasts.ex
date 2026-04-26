@@ -7,7 +7,7 @@ defmodule Poca.Podcasts do
 
   alias Ecto.Multi
   alias Poca.Repo
-  alias Poca.Podcasts.{Podcast, Subscription, Feed}
+  alias Poca.Podcasts.{Podcast, Episode, Subscription, Feed}
   alias Poca.Accounts.User
 
   @doc """
@@ -100,10 +100,40 @@ defmodule Poca.Podcasts do
   @doc """
   Fetches the latest episodes for a given podcast by parsing its feed URL.
   """
-  def refresh_episodes(%Podcast{feed_url: feed_url}) do
+  def refresh_episodes(podcast = %Podcast{id: id, feed_url: feed_url}) do
+    now = DateTime.utc_now()
+
     case Feed.fetch(feed_url) do
-      {:ok, feed} ->
-        {:ok, feed}
+      {:ok, %{"items" => items}} ->
+        episodes = Enum.map(items, fn item ->
+          %{
+            "title" => title,
+            "description" => description,
+            "pub_date" => pub_date,
+            "guid" => %{"value" => guid},
+            "enclosure" => %{"url" => audio_url},
+            "itunes_ext" => %{"duration" => duration}
+          } = item
+
+          %{
+            podcast_id: id,
+            guid: guid,
+            title: title,
+            description: description,
+            audio_url: audio_url,
+            duration: Feed.parse_duration(duration),
+            published_at: Feed.parse_pub_date(pub_date),
+            inserted_at: now,
+            updated_at: now
+          }
+        end)
+
+        Repo.transact(fn ->
+          {:ok, %{podcast: podcast}} = update_podcast(podcast, %{last_fetched_at: now})
+          Poca.Repo.insert_all(Episode, episodes, on_conflict: :replace_all, conflict_target: [:podcast_id, :guid])
+
+          {:ok, podcast}
+        end)
 
       {:error, reason} ->
         {:error, reason}

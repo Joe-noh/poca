@@ -26,4 +26,9 @@ defmodule Poca.Podcasts.Podcast do
     |> validate_required([:feed_url])
     |> unique_constraint(:feed_url, name: "podcasts_feed_url_index")
   end
+
+  def stale?(%__MODULE__{last_fetched_at: nil}), do: true
+  def stale?(%__MODULE__{last_fetched_at: last_fetched_at}) do
+    DateTime.utc_now() |> DateTime.diff(last_fetched_at, :second) |> IO.inspect > 3600 # 1 hour
+  end
 end

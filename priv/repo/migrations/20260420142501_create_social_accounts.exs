@@ -4,9 +4,9 @@ defmodule Poca.Repo.Migrations.CreateSocialAccounts do
   def change do
     create table(:social_accounts, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :provider, :string
-      add :uid, :string
-      add :user_id, references(:users, on_delete: :nothing, type: :binary_id)
+      add :provider, :string, null: false
+      add :uid, :string, null: false
+      add :user_id, references(:users, on_delete: :nothing, type: :binary_id), null: false
 
       timestamps(type: :utc_datetime_usec)
     end
