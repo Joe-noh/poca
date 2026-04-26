@@ -33,7 +33,7 @@ defmodule PocaWeb.PodcastLive.Search do
         </:loading>
       </.async_result>
       <div
-        :if={@podcast.loading || @podcast.result}
+        :if={@live_action == :show}
         id="podcast-modal"
         class={[
           "sticky bottom-0 right-0 left-0 h-1/2 pb-12 bg-paper border-t border-hairline overflow-y-auto",
@@ -106,23 +106,10 @@ defmodule PocaWeb.PodcastLive.Search do
   end
 
   def handle_event("open_podcast", %{"url" => url}, socket) do
-    current_user = socket.assigns.current_user
+    {:ok, %{podcast: podcast}} = Podcasts.create_podcast(%{"feed_url" => url})
+    query = socket.assigns.form[:query].value || ""
 
-    socket =
-      socket
-      |> assign_async(:podcast, fn ->
-        with {:ok, %{podcast: podcast}} <- Podcasts.create_podcast(%{"feed_url" => url}),
-             {:ok, %{podcast: podcast}} <- Podcasts.refresh_podcast(podcast) do
-          podcast = Podcasts.get_podcast(podcast.id, user: current_user)
-
-          {:ok, %{podcast: podcast}}
-        else
-          _error ->
-            {:ok, %{podcast: nil}}
-        end
-      end)
-
-    {:noreply, socket}
+    {:noreply, push_patch(socket, to: "/search/#{podcast.id}?query=#{query}")}
   end
 
   def handle_event("subscribe", %{"id" => id}, socket) do
@@ -137,6 +124,29 @@ defmodule PocaWeb.PodcastLive.Search do
       nil -> {:noreply, socket}
       podcast -> do_handle_unsubscribe(podcast, socket)
     end
+  end
+
+  @impl true
+  def handle_params(%{"id" => id}, _url, socket) do
+    current_user = socket.assigns.current_user
+
+    socket =
+      socket
+      |> assign_async(:podcast, fn ->
+        {:ok, %{podcast: Podcasts.get_podcast(id, user: current_user)}}
+      end)
+      |> assign_async(:podcast, fn ->
+        case Podcasts.get_podcast(id, user: current_user) do
+          nil -> {:ok, %{podcast: nil}}
+          podcast -> Podcasts.refresh_podcast(podcast)
+        end
+      end)
+
+    {:noreply, socket}
+  end
+
+  def handle_params(_params, _url, socket) do
+    {:noreply, socket}
   end
 
   defp do_handle_subscribe(podcast, socket) do
