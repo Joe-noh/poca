@@ -13,6 +13,8 @@ config :poca, PocaWeb.Endpoint,
   secret_key_base: "CNbLNWsU40xXd6rLqraAUqCLCqJ8auCwI/JqMVN90N76Dsj/nbmnRNbpqY7r4RDd",
   server: false
 
+config :poca, :feed_req_opts, plug: {Req.Test, Poca.Podcasts.FeedTestPlug}
+
 config :logger, level: :warning
 
 config :phoenix, :plug_init_mode, :runtime

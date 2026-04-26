@@ -37,7 +37,7 @@ defmodule PocaWeb.ConnCase do
   end
 
   def register_and_login_user(%{conn: conn}) do
-    {:ok, user} = Poca.Accounts.signup_with_google("12345")
+    {:ok, %{user: user}} = Poca.Accounts.signup_with_google("12345")
 
     %{conn: login_user(conn, user), user: user}
   end

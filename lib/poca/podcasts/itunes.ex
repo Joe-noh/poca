@@ -1,5 +1,11 @@
 defmodule Poca.Podcasts.Itunes do
+  @moduledoc """
+  Module for searching podcasts on iTunes.
+  """
+
   defmodule Entry do
+    @moduledoc false
+
     defstruct [
       :artist_name,
       :artwork_url_30,

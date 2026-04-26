@@ -48,7 +48,11 @@ defmodule PocaWeb.PodcastLive.Search do
                 <p class="font-sans text-sm text-muted">{podcast.author}</p>
               </div>
               <%= if length(podcast.subscribers) == 0 do %>
-                <button class="flex items-center justify-center bg-paper border border-muted rounded-full p-2 w-8 h-8 cursor-pointer hover:bg-hairline" phx-click="subscribe" phx-value-id={podcast.id}>
+                <button
+                  class="flex items-center justify-center bg-paper border border-muted rounded-full p-2 w-8 h-8 cursor-pointer hover:bg-hairline"
+                  phx-click="subscribe"
+                  phx-value-id={podcast.id}
+                >
                   <.icon name="plus" class="text-ink w-5 h-5" />
                 </button>
               <% else %>
@@ -107,7 +111,7 @@ defmodule PocaWeb.PodcastLive.Search do
     socket =
       socket
       |> assign_async(:podcast, fn ->
-        with {:ok, %{podcast: podcast}} <- Podcasts.create_podcast(%{feed_url: url}),
+        with {:ok, %{podcast: podcast}} <- Podcasts.create_podcast(%{"feed_url" => url}),
              {:ok, %{podcast: podcast}} <- Podcasts.refresh_podcast(podcast) do
           podcast = Podcasts.get_podcast(podcast.id, user: current_user)
 
@@ -123,49 +127,53 @@ defmodule PocaWeb.PodcastLive.Search do
 
   def handle_event("subscribe", %{"id" => id}, socket) do
     case Podcasts.get_podcast(id) do
-      nil ->
-        {:noreply, socket}
-
-      podcast ->
-        current_user = socket.assigns.current_user
-
-        case Podcasts.subscribe(podcast, current_user) do
-          {:ok, _} ->
-            socket = assign_async(socket, :podcast, fn ->
-              podcast = Podcasts.get_podcast(id, user: current_user)
-
-              {:ok, %{podcast: podcast}}
-            end)
-
-            {:noreply, socket}
-
-          _ ->
-            {:noreply, socket}
-        end
+      nil -> {:noreply, socket}
+      podcast -> do_handle_subscribe(podcast, socket)
     end
   end
 
   def handle_event("unsubscribe", %{"id" => id}, socket) do
     case Podcasts.get_podcast(id) do
-      nil ->
+      nil -> {:noreply, socket}
+      podcast -> do_handle_unsubscribe(podcast, socket)
+    end
+  end
+
+  defp do_handle_subscribe(podcast, socket) do
+    current_user = socket.assigns.current_user
+
+    case Podcasts.subscribe(podcast, current_user) do
+      {:ok, _} ->
+        socket =
+          assign_async(socket, :podcast, fn ->
+            podcast = Podcasts.get_podcast(podcast.id, user: current_user)
+
+            {:ok, %{podcast: podcast}}
+          end)
+
         {:noreply, socket}
 
-      podcast ->
-        current_user = socket.assigns.current_user
+      _ ->
+        {:noreply, socket}
+    end
+  end
 
-        case Podcasts.unsubscribe(podcast, current_user) do
-          {:ok, _} ->
-            socket = assign_async(socket, :podcast, fn ->
-              podcast = Podcasts.get_podcast(id, user: current_user)
+  defp do_handle_unsubscribe(podcast, socket) do
+    current_user = socket.assigns.current_user
 
-              {:ok, %{podcast: podcast}}
-            end)
+    case Podcasts.unsubscribe(podcast, current_user) do
+      {:ok, _} ->
+        socket =
+          assign_async(socket, :podcast, fn ->
+            podcast = Podcasts.get_podcast(podcast.id, user: current_user)
 
-            {:noreply, socket}
+            {:ok, %{podcast: podcast}}
+          end)
 
-          _ ->
-            {:noreply, socket}
-        end
+        {:noreply, socket}
+
+      _ ->
+        {:noreply, socket}
     end
   end
 end

@@ -22,9 +22,9 @@ defmodule Poca.Accounts do
   def signup_with_google(uid) do
     with {:existing, nil} <- {:existing, get_user_by_google_uid(uid)},
          {:ok, user} <- do_signup_with_google(uid) do
-      {:ok, user}
+      {:ok, %{user: user}}
     else
-      {:existing, user} -> {:ok, user}
+      {:existing, user} -> {:ok, %{user: user}}
     end
   end
 
