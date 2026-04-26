@@ -5,8 +5,7 @@ defmodule PocaWeb.PodcastLive.ListenTest do
 
   describe "/listen" do
     setup do
-      {:ok, user} = Poca.Accounts.signup_with_google("12345")
-      %{user: user}
+      Poca.Accounts.signup_with_google("12345")
     end
 
     test "renders listen page", %{conn: conn, user: user} do

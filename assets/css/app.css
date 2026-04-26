@@ -18,8 +18,8 @@
 }
 
 @theme {
-  --color-paper: #f4f1ea;
-  --color-ink: #141311;
+  --color-paper: #f4f0ea;
+  --color-ink: #141810;
   --color-ink2: #2b2925;
   --color-muted: #8a8378;
   --color-hairline: #d9d3c7;
@@ -30,4 +30,7 @@
   --font-mono: "Noto Sans Mono", Consolas, Courier, monospace;
   --text-xs: 9px;
   --text-sm: 11px;
+  --text-base: 14px;
+  --text-md: 16px;
+  --text-lg: 18px;
 }

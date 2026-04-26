@@ -32,17 +32,16 @@ defmodule PocaWeb.Layouts do
 
   slot :inner_block, required: true
 
+  def app(%{device: nil} = assigns) do
+    ~H"""
+    <main class="w-screen h-screen" />
+    """
+  end
+
   def app(assigns) do
     ~H"""
-    <main class="grid sm:grid-cols-[240px_1fr] sm:grid-rows-[1fr_88px] w-screen h-screen">
-      <%= if @device == :mobile do %>
-        <.tabbar>
-          <:item label="HOME" to={~p"/listen"} active={@active_tab == :home} />
-          <:item label="LIBRARY" to={~p"/library"} active={@active_tab == :library} />
-          <:item label="QUEUE" to={~p"/queue"} active={@active_tab == :queue} />
-          <:item label="SEARCH" to={~p"/search"} active={@active_tab == :search} />
-        </.tabbar>
-      <% else %>
+    <main class="grid grid-rows-[1fr_58px] sm:grid-cols-[240px_1fr] sm:grid-rows-[1fr_88px] w-screen h-screen">
+      <%= if @device == :desktop do %>
         <.sidebar entries={@entries}>
           <:item label="HOME" to={~p"/listen"} active={@active_tab == :home} />
           <:item label="LIBRARY" to={~p"/library"} active={@active_tab == :library} />
@@ -50,7 +49,17 @@ defmodule PocaWeb.Layouts do
           <:item label="SEARCH" to={~p"/search"} active={@active_tab == :search} />
         </.sidebar>
       <% end %>
-      {render_slot(@inner_block)}
+      <div class="overflow-y-auto">
+        {render_slot(@inner_block)}
+      </div>
+      <%= if @device == :mobile do %>
+        <.tabbar>
+          <:item label="HOME" to={~p"/listen"} active={@active_tab == :home} />
+          <:item label="LIBRARY" to={~p"/library"} active={@active_tab == :library} />
+          <:item label="QUEUE" to={~p"/queue"} active={@active_tab == :queue} />
+          <:item label="SEARCH" to={~p"/search"} active={@active_tab == :search} />
+        </.tabbar>
+      <% end %>
     </main>
     <.flash_group flash={@flash} />
     """

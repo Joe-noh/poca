@@ -6,7 +6,7 @@ defmodule Poca.AccountsTest do
 
   describe "signup_with_google/1" do
     test "creates a user and social account" do
-      assert {:ok, %User{id: user_id}} = Accounts.signup_with_google("12345")
+      assert {:ok, %{user: %User{id: user_id}}} = Accounts.signup_with_google("12345")
 
       user = Accounts.get_user_by_google_uid("12345")
       account = user.google_account
