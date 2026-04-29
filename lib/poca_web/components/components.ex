@@ -16,7 +16,7 @@ defmodule PocaWeb.Components do
 
   def tabbar(assigns) do
     ~H"""
-    <div class="grid grid-cols-4 fixed bottom-0 left-0 right-0 bg-paper backdrop-blur-lg border-t border-hairline pt-2.5 pb-2 px-2">
+    <div class="grid grid-cols-4 h-12 fixed bottom-0 left-0 right-0 bg-paper border-t border-hairline px-2">
       <.tabbar_entry :for={item <- @item} to={item.to} active={Map.get(item, :active)} label={item.label} />
     </div>
     """
@@ -24,7 +24,7 @@ defmodule PocaWeb.Components do
 
   defp tabbar_entry(assigns) do
     ~H"""
-    <.link navigate={@to} class={["flex flex-col justify-center items-center pb-4 w-full"]}>
+    <.link navigate={@to} class={["flex flex-col justify-center items-center pb-0 w-full"]}>
       <div class={["w-1 h-1 rounded-full mb-1 mx-auto", @active && "bg-ink"]} />
       <span class={["font-sans text-sm tracking-wide transition-colors", if(@active, do: "text-ink", else: "text-muted")]}>{@label}</span>
     </.link>

@@ -100,7 +100,7 @@ defmodule Poca.Podcasts do
   @doc """
   Fetches the latest episodes for a given podcast by parsing its feed URL.
   """
-  def refresh_episodes(podcast = %Podcast{id: id, feed_url: feed_url}) do
+  def refresh_episodes(%Podcast{id: id, feed_url: feed_url} = podcast) do
     now = DateTime.utc_now()
 
     case Feed.fetch(feed_url) do
@@ -158,5 +158,22 @@ defmodule Poca.Podcasts do
     Multi.new()
     |> Multi.delete_all(:subscription, from(s in Subscription, where: s.user_id == ^user.id and s.podcast_id == ^podcast.id))
     |> Repo.transact()
+  end
+
+  def get_episode(id) do
+    Episode |> where([e], e.id == ^id) |> preload(:podcast) |> Repo.one()
+  end
+
+  def subscribed_episodes(%User{id: user_id}) do
+    episodes =
+      Episode
+      |> join(:inner, [e], p in assoc(e, :podcast), as: :podcast)
+      |> join(:inner, [e, podcast: p], s in Subscription, on: s.podcast_id == p.id and s.user_id == ^user_id, as: :subscription)
+      |> preload([e, podcast: p], podcast: p)
+      |> order_by([e], desc: e.published_at)
+      |> limit(100)
+      |> Repo.all()
+
+    {:ok, %{episodes: episodes}}
   end
 end

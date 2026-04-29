@@ -40,7 +40,7 @@ defmodule PocaWeb.Layouts do
 
   def app(assigns) do
     ~H"""
-    <main class="grid grid-rows-[1fr_58px] sm:grid-cols-[240px_1fr] sm:grid-rows-[1fr_88px] w-screen h-screen">
+    <main class="grid grid-rows-[1fr_58px] sm:grid-cols-[240px_1fr] sm:grid-rows-[1fr_110px] w-screen h-screen">
       <%= if @device == :desktop do %>
         <.sidebar entries={@entries}>
           <:item label="HOME" to={~p"/listen"} active={@active_tab == :home} />

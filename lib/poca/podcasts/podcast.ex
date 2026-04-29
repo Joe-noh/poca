@@ -13,6 +13,7 @@ defmodule Poca.Podcasts.Podcast do
     field :artwork_url, :string
     field :last_fetched_at, :utc_datetime_usec
 
+    has_many :episodes, Poca.Podcasts.Episode
     has_many :subscriptions, Poca.Podcasts.Subscription
     has_many :subscribers, through: [:subscriptions, :user]
 
@@ -29,6 +30,6 @@ defmodule Poca.Podcasts.Podcast do
 
   def stale?(%__MODULE__{last_fetched_at: nil}), do: true
   def stale?(%__MODULE__{last_fetched_at: last_fetched_at}) do
-    DateTime.utc_now() |> DateTime.diff(last_fetched_at, :second) |> IO.inspect > 3600 # 1 hour
+    DateTime.utc_now() |> DateTime.diff(last_fetched_at, :second) > 3600 # 1 hour
   end
 end

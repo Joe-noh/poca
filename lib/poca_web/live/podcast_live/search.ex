@@ -133,19 +133,8 @@ defmodule PocaWeb.PodcastLive.Search do
       |> assign_async(:podcast, fn -> {:ok, %{podcast: Podcasts.get_podcast(id, user: current_user)}} end)
       |> assign_async(:podcast, fn ->
         case Podcasts.get_podcast(id, user: current_user) do
-          nil ->
-            {:ok, %{podcast: nil}}
-
-          podcast ->
-            if Podcasts.Podcast.stale?(podcast) do
-              with {:ok, %{podcast: podcast}} <- Podcasts.refresh_podcast(podcast) do
-                Podcasts.refresh_episodes(podcast)
-
-                {:ok, %{podcast: podcast}}
-              end
-            else
-              {:ok, %{podcast: podcast}}
-            end
+          nil -> {:ok, %{podcast: nil}}
+          podcast -> refresh_if_stale(podcast)
         end
       end)
 
@@ -191,6 +180,18 @@ defmodule PocaWeb.PodcastLive.Search do
 
       _ ->
         {:noreply, socket}
+    end
+  end
+
+  defp refresh_if_stale(podcast) do
+    if Podcasts.Podcast.stale?(podcast) do
+      with {:ok, %{podcast: podcast}} <- Podcasts.refresh_podcast(podcast) do
+        Podcasts.refresh_episodes(podcast)
+
+        {:ok, %{podcast: podcast}}
+      end
+    else
+      {:ok, %{podcast: podcast}}
     end
   end
 end

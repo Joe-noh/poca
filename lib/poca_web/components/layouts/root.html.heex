@@ -14,6 +14,31 @@
     <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
     </script>
+    <style>
+      audio::-webkit-media-controls-panel {
+        background-color: var(--color-paper);
+      }
+      audio::-webkit-media-controls-play-button {
+        background-color: var(--color-hairline);
+        border-radius: 50%;
+        margin-right: 12px;
+      }
+      audio::-webkit-media-controls-mute-button,
+      audio::-webkit-media-controls-volume-control-container,
+      audio::-webkit-media-controls-volume-control-hover-background,
+      audio::-webkit-media-controls-toggle-closed-captions-button,
+      audio::-webkit-media-controls-overlay-enclosure,
+      audio::-webkit-media-controls-fullscreen-button {
+        display: none;
+        appearance: none;
+      }
+      audio::-webkit-media-controls-current-time-display,
+      audio::-webkit-media-controls-time-remaining-display {
+        color: var(--color-ink);
+        font-size: var(--text-base);
+        font-family: var(--font-sans)
+      }
+    </style>
   </head>
   <body class="bg-paper text-ink text-base min-h-screen">
     {@inner_content}
