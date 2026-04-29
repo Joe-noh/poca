@@ -60,7 +60,7 @@ defmodule Poca.PodcastsTest do
     end
 
     test "returns episodes from subscribed podcasts", %{user: user, podcast: podcast, episode: episode} do
-      episodes = Podcasts.subscribed_episodes(user)
+      {:ok, %{episodes: episodes}} = Podcasts.subscribed_episodes(user)
 
       assert [episode] = episodes
       assert Enum.all?(episodes, fn e -> e.podcast == podcast end)

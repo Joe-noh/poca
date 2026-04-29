@@ -19,19 +19,7 @@ defmodule PocaWeb.UserAuth do
     |> Phoenix.Controller.redirect(to: ~p"/")
   end
 
-  def fetch_current_user(conn, _opts) do
-    user = conn |> Plug.Conn.get_session(:user_id) |> Accounts.get_user()
-
-    if user do
-      conn
-      |> Plug.Conn.assign(:current_user, user)
-      |> create_or_extend_session(user)
-    else
-      Plug.Conn.assign(conn, :current_user, nil)
-    end
-  end
-
-  defp create_or_extend_session(conn, user) do
+  def create_or_extend_session(conn, user) do
     conn
     |> renew_session(user)
     |> Plug.Conn.put_session(:user_id, user.id)

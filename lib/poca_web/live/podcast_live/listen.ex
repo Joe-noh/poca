@@ -26,7 +26,7 @@ defmodule PocaWeb.PodcastLive.Listen do
                   <div class="flex flex-col">
                     <span class="text-sm font-sans text-muted">{format_duration(episode.duration)}</span>
                     <div class="relative w-full h-0.5 rounded-md bg-hairline mt-1">
-                      <div class="absolute top-0 left-0 h-0.5 rounded-md bg-muted" style={"width: #{(30 / 100) * 100}%"}></div>
+                      <div class="absolute top-0 left-0 h-0.5 rounded-md bg-muted" style={"width: #{(0 / 100) * 100}%"}></div>
                     </div>
                   </div>
                 </div>
