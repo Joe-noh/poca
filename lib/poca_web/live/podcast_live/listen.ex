@@ -9,12 +9,28 @@ defmodule PocaWeb.PodcastLive.Listen do
     ~H"""
     <Layouts.app device={@device} active_tab={@active_tab} flash={@flash}>
       <.async_result :let={episodes} assign={@episodes}>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+        <div class="grid grid-cols-1 px-4">
           <%= for episode <- episodes do %>
-            <div id={"episode-#{episode.id}"} class="episode-card flex flex-col cursor-pointer" phx-click="play_episode" phx-value-id={episode.id}>
-              <p class="font-bold font-sans text-ink mb-1 truncate">{episode.title}</p>
-              <p class="text-sm font-sans text-muted mb-1 truncate">{episode.podcast.title}</p>
-              <p class="text-sm font-sans text-muted">{format_duration(episode.duration)}</p>
+            <div
+              id={"episode-#{episode.id}"}
+              class="flex flex-row items-start gap-4 py-2 w-full cursor-pointer border-b border-hairline"
+              phx-click="play_episode"
+              phx-value-id={episode.id}
+            >
+              <img src={episode.podcast.artwork_url} alt={episode.title} class="w-12 h-12 bg-hairline rounded-md" />
+              <div class="flex flex-col justify-between w-full h-full gap-0.5">
+                <span class="text-base font-sans text-ink">{episode.title}</span>
+                <div class="flex flex-row justify-between items-end">
+                  <!-- TODO format date -->
+                  <span class="text-sm font-sans text-muted truncate">{episode.published_at}</span>
+                  <div class="flex flex-col">
+                    <span class="text-sm font-sans text-muted">{format_duration(episode.duration)}</span>
+                    <div class="relative w-full h-0.5 rounded-md bg-hairline mt-1">
+                      <div class="absolute top-0 left-0 h-0.5 rounded-md bg-muted" style={"width: #{(30 / 100) * 100}%"}></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           <% end %>
         </div>

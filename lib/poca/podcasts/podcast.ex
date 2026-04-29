@@ -29,7 +29,9 @@ defmodule Poca.Podcasts.Podcast do
   end
 
   def stale?(%__MODULE__{last_fetched_at: nil}), do: true
+
   def stale?(%__MODULE__{last_fetched_at: last_fetched_at}) do
-    DateTime.utc_now() |> DateTime.diff(last_fetched_at, :second) > 3600 # 1 hour
+    # 1 hour
+    DateTime.utc_now() |> DateTime.diff(last_fetched_at, :second) > 3600
   end
 end

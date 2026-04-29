@@ -105,28 +105,29 @@ defmodule Poca.Podcasts do
 
     case Feed.fetch(feed_url) do
       {:ok, %{"items" => items}} ->
-        episodes = Enum.map(items, fn item ->
-          %{
-            "title" => title,
-            "description" => description,
-            "pub_date" => pub_date,
-            "guid" => %{"value" => guid},
-            "enclosure" => %{"url" => audio_url},
-            "itunes_ext" => %{"duration" => duration}
-          } = item
+        episodes =
+          Enum.map(items, fn item ->
+            %{
+              "title" => title,
+              "description" => description,
+              "pub_date" => pub_date,
+              "guid" => %{"value" => guid},
+              "enclosure" => %{"url" => audio_url},
+              "itunes_ext" => %{"duration" => duration}
+            } = item
 
-          %{
-            podcast_id: id,
-            guid: guid,
-            title: title,
-            description: description,
-            audio_url: audio_url,
-            duration: Feed.parse_duration(duration),
-            published_at: Feed.parse_pub_date(pub_date),
-            inserted_at: now,
-            updated_at: now
-          }
-        end)
+            %{
+              podcast_id: id,
+              guid: guid,
+              title: title,
+              description: description,
+              audio_url: audio_url,
+              duration: Feed.parse_duration(duration),
+              published_at: Feed.parse_pub_date(pub_date),
+              inserted_at: now,
+              updated_at: now
+            }
+          end)
 
         Repo.transact(fn ->
           {:ok, %{podcast: podcast}} = update_podcast(podcast, %{last_fetched_at: now})

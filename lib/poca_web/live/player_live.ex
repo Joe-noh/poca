@@ -13,8 +13,8 @@ defmodule PocaWeb.PlayerLive do
       phx-hook=".GlobalPlayer"
     >
       <div class="flex flex-col justify-start gap-1 font-sans">
-        <span id="episode-title" class="text-ink text-base truncate"> </span>
-        <span id="podcast-title" class="text-muted text-sm truncate"> </span>
+        <span id="episode-title" class="text-ink text-base truncate"></span>
+        <span id="podcast-title" class="text-muted text-sm truncate"></span>
       </div>
       <audio id="audio-player" controls class="w-full" />
     </div>
