@@ -93,4 +93,28 @@ defmodule PocaWeb.Components do
     </script>
     """
   end
+
+  def episode_published_at(%{episode: episode} = assigns) do
+    ~H"""
+    <span id={"episode-#{episode.id}-published-at"} class="text-sm font-sans text-muted" phx-hook=".EpisodePublishedAt" data-value={episode.published_at} />
+    <script :type={Phoenix.LiveView.ColocatedHook} name=".EpisodePublishedAt">
+      export default {
+        mounted() {
+          this.displayPublishedAt(this.el);
+        },
+
+        updated() {
+          this.displayPublishedAt(this.el);
+        },
+
+        displayPublishedAt(span) {
+          const publishedAt = new Date(span.dataset.value);
+          const options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' };
+
+          span.textContent = new Intl.DateTimeFormat(undefined, options).format(publishedAt);
+        }
+      };
+    </script>
+    """
+  end
 end

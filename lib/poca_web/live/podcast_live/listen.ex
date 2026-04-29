@@ -21,8 +21,7 @@ defmodule PocaWeb.PodcastLive.Listen do
               <div class="flex flex-col justify-between w-full h-full gap-0.5">
                 <span class="text-base font-sans text-ink">{episode.title}</span>
                 <div class="flex flex-row justify-between items-end">
-                  <!-- TODO format date -->
-                  <span class="text-sm font-sans text-muted truncate">{episode.published_at}</span>
+                  <.episode_published_at episode={episode} />
                   <div class="flex flex-col">
                     <span class="text-sm font-sans text-muted">{format_duration(episode.duration)}</span>
                     <div class="relative w-full h-0.5 rounded-md bg-hairline mt-1">
