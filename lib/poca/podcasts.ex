@@ -57,6 +57,17 @@ defmodule Poca.Podcasts do
     |> preload([p, subscribers: s], subscribers: s)
   end
 
+  def subscribed_podcasts(%User{id: user_id}) do
+    podcasts =
+      Podcast
+      |> join(:inner, [p], s in assoc(p, :subscribers), on: s.id == ^user_id, as: :subscribers)
+      |> preload([p, subscribers: s], subscribers: s)
+      |> order_by([p], desc: p.inserted_at)
+      |> Repo.all()
+
+    {:ok, %{podcasts: podcasts}}
+  end
+
   def create_podcast(attrs \\ %{}) do
     case get_podcast_by_feed_url(attrs["feed_url"]) do
       nil ->

@@ -4,8 +4,6 @@ let resizeHandler;
 
 export const ViewportResize = {
   mounted() {
-    this.pushResizeEvent();
-
     resizeHandler = debounce(() => this.pushResizeEvent(), 100);
 
     window.addEventListener("resize", resizeHandler);
