@@ -10,7 +10,7 @@ defmodule PocaWeb.Router do
     plug :put_root_layout, html: {PocaWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug :fetch_current_user
+    plug PocaWeb.CurrentUserPlug
   end
 
   pipeline :api do

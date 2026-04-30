@@ -15,7 +15,7 @@ defmodule Poca.PodcastsTest do
       {:ok, %{user: user, feed: feed}}
     end
 
-    test "fetches and updates podcast feed data", %{feed: feed} do
+    test "fetches and updates podcast feed data" do
       {:ok, %{podcast: podcast}} = Podcasts.create_podcast(%{"feed_url" => "http://example.com/feed"})
       {:ok, %{podcast: podcast}} = Podcasts.refresh_podcast(podcast)
 
@@ -52,11 +52,43 @@ defmodule Poca.PodcastsTest do
     end
   end
 
+  describe "subscribed_episodes/1" do
+    setup [:signup_user, :create_podcast, :create_episode]
+
+    setup %{user: user, podcast: podcast} do
+      Podcasts.subscribe(podcast, user)
+    end
+
+    test "returns episodes from subscribed podcasts", %{user: user, podcast: podcast, episode: episode} do
+      {:ok, %{episodes: [subscribed]}} = Podcasts.subscribed_episodes(user)
+
+      assert subscribed.id == episode.id
+      assert subscribed.podcast.id == podcast.id
+    end
+  end
+
   defp signup_user(_) do
     Accounts.signup_with_google("12345")
   end
 
   defp create_podcast(_) do
     Podcasts.create_podcast(%{"feed_url" => "http://example.com/feed"})
+  end
+
+  defp create_episode(%{podcast: podcast}) do
+    {:ok, episode} =
+      podcast
+      |> Ecto.build_assoc(:episodes)
+      |> Ecto.Changeset.change(%{
+        guid: Ecto.UUID.generate(),
+        title: "Episode title",
+        description: "Episode description",
+        audio_url: "http://example.com/audio.mp3",
+        duration: 3600,
+        published_at: DateTime.utc_now()
+      })
+      |> Poca.Repo.insert()
+
+    {:ok, %{episode: episode}}
   end
 end

@@ -13,6 +13,7 @@ defmodule Poca.Podcasts.Podcast do
     field :artwork_url, :string
     field :last_fetched_at, :utc_datetime_usec
 
+    has_many :episodes, Poca.Podcasts.Episode
     has_many :subscriptions, Poca.Podcasts.Subscription
     has_many :subscribers, through: [:subscriptions, :user]
 
@@ -25,5 +26,12 @@ defmodule Poca.Podcasts.Podcast do
     |> cast(attrs, [:title, :author, :description, :link, :feed_url, :artwork_url, :last_fetched_at])
     |> validate_required([:feed_url])
     |> unique_constraint(:feed_url, name: "podcasts_feed_url_index")
+  end
+
+  def stale?(%__MODULE__{last_fetched_at: nil}), do: true
+
+  def stale?(%__MODULE__{last_fetched_at: last_fetched_at}) do
+    # 1 hour
+    DateTime.utc_now() |> DateTime.diff(last_fetched_at, :second) > 3600
   end
 end

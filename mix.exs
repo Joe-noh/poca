@@ -37,6 +37,7 @@ defmodule Poca.MixProject do
   defp deps do
     [
       {:bandit, "~> 1.5"},
+      {:date_time_parser, "~> 1.3"},
       {:dns_cluster, "~> 0.2.0"},
       {:ecto_sql, "~> 3.13"},
       {:fast_rss, "~> 0.5"},

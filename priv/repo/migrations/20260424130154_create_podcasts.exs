@@ -8,8 +8,8 @@ defmodule Poca.Repo.Migrations.CreatePodcasts do
       add :author, :string
       add :description, :text
       add :link, :string
-      add :feed_url, :string, null: false
-      add :artwork_url, :string
+      add :feed_url, :text, null: false
+      add :artwork_url, :text
       add :last_fetched_at, :utc_datetime_usec
 
       timestamps(type: :utc_datetime_usec)
