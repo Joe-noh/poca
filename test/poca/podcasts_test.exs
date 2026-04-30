@@ -15,7 +15,7 @@ defmodule Poca.PodcastsTest do
       {:ok, %{user: user, feed: feed}}
     end
 
-    test "fetches and updates podcast feed data", %{feed: feed} do
+    test "fetches and updates podcast feed data" do
       {:ok, %{podcast: podcast}} = Podcasts.create_podcast(%{"feed_url" => "http://example.com/feed"})
       {:ok, %{podcast: podcast}} = Podcasts.refresh_podcast(podcast)
 
@@ -60,10 +60,10 @@ defmodule Poca.PodcastsTest do
     end
 
     test "returns episodes from subscribed podcasts", %{user: user, podcast: podcast, episode: episode} do
-      {:ok, %{episodes: episodes}} = Podcasts.subscribed_episodes(user)
+      {:ok, %{episodes: [subscribed]}} = Podcasts.subscribed_episodes(user)
 
-      assert [episode] = episodes
-      assert Enum.all?(episodes, fn e -> e.podcast == podcast end)
+      assert subscribed.id == episode.id
+      assert subscribed.podcast.id == podcast.id
     end
   end
 

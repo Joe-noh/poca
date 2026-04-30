@@ -52,7 +52,17 @@ defmodule PocaWeb.PodcastLive.Listen do
   @impl true
   def handle_event("play_episode", %{"id" => episode_id}, socket) do
     episode = Podcasts.get_episode(episode_id)
-    socket = push_event(socket, "play_audio", %{url: episode.audio_url, title: episode.title, author: episode.podcast.title})
+
+    socket =
+      socket
+      |> assign(:current_episode, episode)
+      |> push_event("play_audio", %{
+        url: episode.audio_url,
+        title: episode.title,
+        author: episode.podcast.title,
+        image: episode.podcast.artwork_url,
+        duration: episode.duration
+      })
 
     {:noreply, socket}
   end
