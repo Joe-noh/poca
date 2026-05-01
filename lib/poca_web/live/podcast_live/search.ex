@@ -34,7 +34,7 @@ defmodule PocaWeb.PodcastLive.Search do
         :if={@live_action == :show}
         id="podcast-modal"
         class={[
-          "sticky bottom-0 right-0 left-0 h-1/2 pb-12 bg-paper border-t border-hairline overflow-y-auto",
+          "sticky -bottom-32 right-0 left-0 h-1/2 bg-paper border-t border-hairline overflow-y-auto",
           "transition-all duration-200 animate-slide-in starting:translate-y-full"
         ]}
       >

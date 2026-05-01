@@ -79,6 +79,8 @@ defmodule PocaWeb.PodcastLive.Listen do
     end
   end
 
+  defp format_duration(_), do: "0:00"
+
   defp pad_zero(value) when value < 10, do: "0#{value}"
   defp pad_zero(value), do: "#{value}"
 end
