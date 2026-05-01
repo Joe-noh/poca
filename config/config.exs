@@ -17,9 +17,17 @@ config :poca, PocaWeb.Endpoint,
 config :poca, Oban,
   engine: Oban.Engines.Basic,
   repo: Poca.Repo,
-  queues: [default: 10]
+  queues: [default: 10],
+  plugins: [
+    {Oban.Plugins.Pruner, max_age: 60 * 60 * 24 * 7},
+    {Oban.Plugins.Lifeline, rescue_after: :timer.minutes(30)},
+    {Oban.Plugins.Cron,
+     crontab: [
+       {"*/10 * * * *", Poca.RefreshFeedWorker, max_attempts: 1}
+     ]}
+  ]
 
-  config :ueberauth, Ueberauth,
+config :ueberauth, Ueberauth,
   providers: [
     google: {Ueberauth.Strategy.Google, []}
   ]

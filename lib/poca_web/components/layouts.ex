@@ -49,7 +49,7 @@ defmodule PocaWeb.Layouts do
           <:item label="SEARCH" to={~p"/search"} active={@active_tab == :search} />
         </.sidebar>
       <% end %>
-      <div class="overflow-y-auto pt-2 pb-32">
+      <div class="overflow-y-auto pb-32">
         {render_slot(@inner_block)}
       </div>
       <%= if @device == :mobile do %>
