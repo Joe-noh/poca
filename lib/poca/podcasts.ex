@@ -57,6 +57,35 @@ defmodule Poca.Podcasts do
     |> preload([p, subscribers: s], subscribers: s)
   end
 
+  def subscribed_podcasts(%User{id: user_id}) do
+    podcasts =
+      Podcast
+      |> join(:inner, [p], s in assoc(p, :subscribers), on: s.id == ^user_id, as: :subscribers)
+      |> preload([p, subscribers: s], subscribers: s)
+      |> order_by([p], desc: p.inserted_at)
+      |> Repo.all()
+
+    podcasts = count_episodes(podcasts)
+
+    {:ok, %{podcasts: podcasts}}
+  end
+
+  def count_episodes(podcasts) do
+    podcast_ids = Enum.map(podcasts, & &1.id)
+
+    counts =
+      Episode
+      |> where([e], e.podcast_id in ^podcast_ids)
+      |> group_by([e], e.podcast_id)
+      |> select([e], {e.podcast_id, count(e.id)})
+      |> Repo.all()
+      |> Map.new()
+
+    Enum.map(podcasts, fn podcast ->
+      Map.put(podcast, :episodes_count, Map.get(counts, podcast.id, 0))
+    end)
+  end
+
   def create_podcast(attrs \\ %{}) do
     case get_podcast_by_feed_url(attrs["feed_url"]) do
       nil ->
