@@ -43,6 +43,7 @@ defmodule Poca.MixProject do
       {:fast_rss, "~> 0.5"},
       {:gettext, "~> 1.0"},
       {:jason, "~> 1.2"},
+      {:oban, "~> 2.22"},
       {:phoenix, "~> 1.8.5"},
       {:phoenix_ecto, "~> 4.5"},
       {:phoenix_html, "~> 4.1"},
