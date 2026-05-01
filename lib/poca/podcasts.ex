@@ -7,7 +7,7 @@ defmodule Poca.Podcasts do
 
   alias Ecto.Multi
   alias Poca.Repo
-  alias Poca.Podcasts.{Podcast, Episode, Subscription, Feed}
+  alias Poca.Podcasts.{Podcast, Episode, Subscription, Playback, Feed}
   alias Poca.Accounts.User
 
   @doc """
@@ -205,5 +205,15 @@ defmodule Poca.Podcasts do
       |> Repo.all()
 
     {:ok, %{episodes: episodes}}
+  end
+
+  def save_playback_progress(user, episode, current_time, duration) do
+    changeset =
+      %Playback{user_id: user.id, episode_id: episode.id}
+      |> Playback.changeset(%{current_time: current_time, duration: duration})
+
+    Multi.new()
+    |> Multi.insert(:playback, changeset, on_conflict: {:replace_all_except, [:id, :user_id, :episode_id]}, conflict_target: [:user_id, :episode_id])
+    |> Repo.transact()
   end
 end

@@ -4,10 +4,7 @@ defmodule Poca.Repo.Migrations.CreateEpisodes do
   def change do
     create table(:episodes, primary_key: false) do
       add :id, :binary_id, primary_key: true
-
-      add :podcast_id, references(:podcasts, on_delete: :delete_all, type: :binary_id),
-        null: false
-
+      add :podcast_id, references(:podcasts, on_delete: :delete_all, type: :binary_id), null: false
       add :guid, :string
       add :title, :string
       add :description, :text

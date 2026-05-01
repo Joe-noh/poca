@@ -2,6 +2,8 @@ defmodule PocaWeb.PlayerLive do
   @moduledoc false
   use PocaWeb, :live_view
 
+  alias Poca.{Podcasts, Accounts}
+
   def render(assigns) do
     ~H"""
     <div
@@ -41,7 +43,7 @@ defmodule PocaWeb.PlayerLive do
           });
 
           audio.addEventListener('timeupdate', ({ target }) => {
-            this.savePlaybackProgress(episodeId, target.currentTime);
+            this.savePlaybackProgress(episodeId, target.currentTime, target.duration);
 
             if ('mediaSession' in navigator && navigator.mediaSession.setPositionState) {
               navigator.mediaSession.setPositionState({
@@ -76,14 +78,19 @@ defmodule PocaWeb.PlayerLive do
           });
         },
 
-        savePlaybackProgress(episodeId, currentTime) {
+        savePlaybackProgress(episodeId, currentTime, duration) {
           if (!episodeId) return;
 
           const now = Date.now();
 
           if (now - lastPlaybackSavedAt > 10000) {
-            this.pushEvent("save_playback_progress", { episode_id: episodeId, current_time: currentTime });
             lastPlaybackSavedAt = now;
+
+            this.pushEvent("save_playback_progress", {
+              episode_id: episodeId,
+              current_time: currentTime,
+              duration: duration,
+            });
           }
         },
       };
@@ -91,12 +98,19 @@ defmodule PocaWeb.PlayerLive do
     """
   end
 
-  def mount(_params, _session, socket) do
+  def mount(_params, %{"user_id" => user_id}, socket) do
+    socket = socket |> assign(:current_user, Accounts.get_user(user_id))
+
     {:ok, socket, layout: false}
   end
 
-  def handle_event("save_playback_progress", %{"episode_id" => episode_id, "current_time" => current_time}, socket) do
-    IO.inspect({:saving_progress, episode_id, current_time})
+  def handle_event("save_playback_progress", params, socket) do
+    %{"episode_id" => episode_id, "current_time" => current_time, "duration" => duration} = params
+
+    user = socket.assigns.current_user
+    episode = Podcasts.get_episode(episode_id)
+
+    Podcasts.save_playback_progress(user, episode, current_time, duration)
 
     {:noreply, socket}
   end
