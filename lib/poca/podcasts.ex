@@ -57,6 +57,12 @@ defmodule Poca.Podcasts do
     |> preload([p, subscribers: s], subscribers: s)
   end
 
+  def subscribed_podcasts() do
+    Podcast
+    |> join(:inner, [p], s in assoc(p, :subscriptions), as: :subscriptions)
+    |> distinct([p], p.id)
+  end
+
   def subscribed_podcasts(%User{id: user_id}) do
     podcasts =
       Podcast
@@ -160,9 +166,9 @@ defmodule Poca.Podcasts do
 
         Repo.transact(fn ->
           {:ok, %{podcast: podcast}} = update_podcast(podcast, %{last_fetched_at: now})
-          Poca.Repo.insert_all(Episode, episodes, on_conflict: :replace_all, conflict_target: [:podcast_id, :guid])
+          Repo.insert_all(Episode, episodes, on_conflict: {:replace_all_except, [:id, :podcast_id, :guid]}, conflict_target: [:podcast_id, :guid])
 
-          {:ok, podcast}
+          {:ok, %{podcast: podcast}}
         end)
 
       {:error, reason} ->

@@ -88,7 +88,7 @@ defmodule PocaWeb.PodcastLive.Listen do
   defp pad_zero(value), do: "#{value}"
 
   defp playback_progress(%{playback: %{current_time: current_time, duration: duration}}) when duration > 0 do
-    "#{round((current_time / duration) * 100)}%"
+    "#{round(current_time / duration * 100)}%"
   end
 
   defp playback_progress(_), do: "0%"

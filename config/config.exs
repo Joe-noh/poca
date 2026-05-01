@@ -14,6 +14,19 @@ config :poca, PocaWeb.Endpoint,
   pubsub_server: Poca.PubSub,
   live_view: [signing_salt: "egJFWTJZ"]
 
+config :poca, Oban,
+  engine: Oban.Engines.Basic,
+  repo: Poca.Repo,
+  queues: [default: 10],
+  plugins: [
+    {Oban.Plugins.Pruner, max_age: 60 * 60 * 24 * 7},
+    {Oban.Plugins.Lifeline, rescue_after: :timer.minutes(30)},
+    {Oban.Plugins.Cron,
+     crontab: [
+       {"*/10 * * * *", Poca.RefreshFeedWorker, max_attempts: 1}
+     ]}
+  ]
+
 config :ueberauth, Ueberauth,
   providers: [
     google: {Ueberauth.Strategy.Google, []}
