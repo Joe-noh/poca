@@ -36,7 +36,9 @@ defmodule PocaWeb.PlayerLive do
             }
           });
 
-          audio.addEventListener('ended', () => {
+          audio.addEventListener('ended', ({ target }) => {
+            this.savePlaybackProgress(episodeId, target.currentTime, target.duration);
+
             if ('mediaSession' in navigator) {
               navigator.mediaSession.playbackState = 'none';
             }
@@ -46,15 +48,17 @@ defmodule PocaWeb.PlayerLive do
             this.savePlaybackProgress(episodeId, target.currentTime, target.duration);
 
             if ('mediaSession' in navigator && navigator.mediaSession.setPositionState) {
-              navigator.mediaSession.setPositionState({
-                duration: target.duration,
-                playbackRate: target.playbackRate,
-                position: target.currentTime,
-              });
+              if (target.duration > 0) {
+                navigator.mediaSession.setPositionState({
+                  duration: target.duration,
+                  playbackRate: target.playbackRate,
+                  position: target.currentTime,
+                });
+              }
             }
           });
 
-          this.handleEvent('play_audio', ({ id, url, title, author, image, duration }) => {
+          this.handleEvent('play_audio', ({ id, url, title, author, image, duration, current_time }) => {
             episodeId = id;
             episodeTitle.textContent = title;
             podcastTitle.textContent = author;
@@ -66,14 +70,17 @@ defmodule PocaWeb.PlayerLive do
                 artwork: [{ src: image, sizes: '600x600', type: 'image/jpeg' }],
               });
 
-              navigator.mediaSession.setPositionState({
-                duration: 1.0 * duration,
-                playbackRate: 1,
-                position: 0,
-              });
+              if (duration > 0) {
+                navigator.mediaSession.setPositionState({
+                  duration: 1.0 * duration,
+                  playbackRate: 1,
+                  position: 1.0 * current_time,
+                });
+              }
             }
 
             audio.src = url;
+            audio.currentTime = current_time;
             audio.play();
           });
         },

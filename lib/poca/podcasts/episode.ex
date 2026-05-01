@@ -2,7 +2,7 @@ defmodule Poca.Podcasts.Episode do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Poca.Podcasts.Podcast
+  alias Poca.Podcasts.{Podcast, Playback}
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -13,6 +13,9 @@ defmodule Poca.Podcasts.Episode do
     field :audio_url, :string
     field :duration, :integer
     field :published_at, :utc_datetime_usec
+
+    has_one :playback, Playback
+    has_many :playbacks, Playback
 
     belongs_to :podcast, Podcast
 

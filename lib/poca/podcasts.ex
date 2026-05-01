@@ -199,12 +199,19 @@ defmodule Poca.Podcasts do
       Episode
       |> join(:inner, [e], p in assoc(e, :podcast), as: :podcast)
       |> join(:inner, [e, podcast: p], s in Subscription, on: s.podcast_id == p.id and s.user_id == ^user_id, as: :subscription)
-      |> preload([e, podcast: p], podcast: p)
+      |> join(:left, [e, podcast: p], pb in Playback, on: pb.episode_id == e.id and pb.user_id == ^user_id, as: :playback)
+      |> preload([e, podcast: p, playback: pb], podcast: p, playback: pb)
       |> order_by([e], desc: e.published_at)
       |> limit(100)
       |> Repo.all()
 
     {:ok, %{episodes: episodes}}
+  end
+
+  def get_playback(episode, user) do
+    Playback
+    |> where([pb], pb.episode_id == ^episode.id and pb.user_id == ^user.id)
+    |> Repo.one()
   end
 
   def save_playback_progress(user, episode, current_time, duration) do
