@@ -15,6 +15,10 @@ defmodule PocaWeb.PodcastLive.Library do
               <img src={podcast.artwork_url} alt={podcast.title} class="w-12 h-12 bg-hairline rounded-md" />
               <div class="flex flex-col justify-between w-full h-full gap-0.5">
                 <span class="text-base font-sans text-ink">{podcast.title}</span>
+                <div class="flex flex-row items-end gap-0.5 text-muted">
+                  <.icon name="microphone" class="size-3.5" />
+                  <span class="text-sm font-sans">{podcast.episodes_count}</span>
+                </div>
               </div>
             </div>
           <% end %>
@@ -34,19 +38,4 @@ defmodule PocaWeb.PodcastLive.Library do
 
     {:ok, socket}
   end
-
-  defp format_duration(duration) when is_integer(duration) do
-    hours = div(duration, 3600)
-    minutes = div(rem(duration, 3600), 60)
-    seconds = rem(duration, 60)
-
-    cond do
-      hours > 0 -> "#{hours}:#{pad_zero(minutes)}:#{pad_zero(seconds)}"
-      minutes > 0 -> "#{minutes}:#{pad_zero(seconds)}"
-      true -> "0:#{pad_zero(seconds)}"
-    end
-  end
-
-  defp pad_zero(value) when value < 10, do: "0#{value}"
-  defp pad_zero(value), do: "#{value}"
 end

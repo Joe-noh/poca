@@ -13,6 +13,8 @@ defmodule Poca.Podcasts.Podcast do
     field :artwork_url, :string
     field :last_fetched_at, :utc_datetime_usec
 
+    field :episodes_count, :integer, virtual: true
+
     has_many :episodes, Poca.Podcasts.Episode
     has_many :subscriptions, Poca.Podcasts.Subscription
     has_many :subscribers, through: [:subscriptions, :user]

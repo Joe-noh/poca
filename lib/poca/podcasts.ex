@@ -65,7 +65,25 @@ defmodule Poca.Podcasts do
       |> order_by([p], desc: p.inserted_at)
       |> Repo.all()
 
+    podcasts = count_episodes(podcasts)
+
     {:ok, %{podcasts: podcasts}}
+  end
+
+  def count_episodes(podcasts) do
+    podcast_ids = Enum.map(podcasts, & &1.id)
+
+    counts =
+      Episode
+      |> where([e], e.podcast_id in ^podcast_ids)
+      |> group_by([e], e.podcast_id)
+      |> select([e], {e.podcast_id, count(e.id)})
+      |> Repo.all()
+      |> Map.new()
+
+    Enum.map(podcasts, fn podcast ->
+      Map.put(podcast, :episodes_count, Map.get(counts, podcast.id, 0))
+    end)
   end
 
   def create_podcast(attrs \\ %{}) do
