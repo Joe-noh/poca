@@ -14,7 +14,12 @@ config :poca, PocaWeb.Endpoint,
   pubsub_server: Poca.PubSub,
   live_view: [signing_salt: "egJFWTJZ"]
 
-config :ueberauth, Ueberauth,
+config :poca, Oban,
+  engine: Oban.Engines.Basic,
+  repo: Poca.Repo,
+  queues: [default: 10]
+
+  config :ueberauth, Ueberauth,
   providers: [
     google: {Ueberauth.Strategy.Google, []}
   ]
