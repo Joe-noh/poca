@@ -7,7 +7,7 @@ defmodule Poca.Podcasts do
 
   alias Ecto.Multi
   alias Poca.Repo
-  alias Poca.Podcasts.{Podcast, Episode, Subscription, Feed}
+  alias Poca.Podcasts.{Podcast, Episode, Subscription, Playback, Feed}
   alias Poca.Accounts.User
 
   @doc """
@@ -199,11 +199,28 @@ defmodule Poca.Podcasts do
       Episode
       |> join(:inner, [e], p in assoc(e, :podcast), as: :podcast)
       |> join(:inner, [e, podcast: p], s in Subscription, on: s.podcast_id == p.id and s.user_id == ^user_id, as: :subscription)
-      |> preload([e, podcast: p], podcast: p)
+      |> join(:left, [e, podcast: p], pb in Playback, on: pb.episode_id == e.id and pb.user_id == ^user_id, as: :playback)
+      |> preload([e, podcast: p, playback: pb], podcast: p, playback: pb)
       |> order_by([e], desc: e.published_at)
       |> limit(100)
       |> Repo.all()
 
     {:ok, %{episodes: episodes}}
+  end
+
+  def get_playback(episode, user) do
+    Playback
+    |> where([pb], pb.episode_id == ^episode.id and pb.user_id == ^user.id)
+    |> Repo.one()
+  end
+
+  def save_playback_progress(user, episode, current_time, duration) do
+    changeset =
+      %Playback{user_id: user.id, episode_id: episode.id}
+      |> Playback.changeset(%{current_time: current_time, duration: duration})
+
+    Multi.new()
+    |> Multi.insert(:playback, changeset, on_conflict: {:replace_all_except, [:id, :user_id, :episode_id]}, conflict_target: [:user_id, :episode_id])
+    |> Repo.transact()
   end
 end

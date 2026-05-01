@@ -2,6 +2,8 @@ defmodule PocaWeb.PlayerLive do
   @moduledoc false
   use PocaWeb, :live_view
 
+  alias Poca.{Podcasts, Accounts}
+
   def render(assigns) do
     ~H"""
     <div
@@ -19,6 +21,9 @@ defmodule PocaWeb.PlayerLive do
       <audio id="audio-player" controls class="w-full h-12" />
     </div>
     <script :type={Phoenix.LiveView.ColocatedHook} name=".GlobalPlayer">
+      let episodeId = null;
+      let lastPlaybackSavedAt = 0;
+
       export default {
         mounted() {
           const audio = document.getElementById('audio-player');
@@ -31,23 +36,30 @@ defmodule PocaWeb.PlayerLive do
             }
           });
 
-          audio.addEventListener('ended', () => {
+          audio.addEventListener('ended', ({ target }) => {
+            this.savePlaybackProgress(episodeId, target.currentTime, target.duration);
+
             if ('mediaSession' in navigator) {
               navigator.mediaSession.playbackState = 'none';
             }
           });
 
           audio.addEventListener('timeupdate', ({ target }) => {
+            this.savePlaybackProgress(episodeId, target.currentTime, target.duration);
+
             if ('mediaSession' in navigator && navigator.mediaSession.setPositionState) {
-              navigator.mediaSession.setPositionState({
-                duration: target.duration,
-                playbackRate: target.playbackRate,
-                position: target.currentTime,
-              });
+              if (target.duration > 0) {
+                navigator.mediaSession.setPositionState({
+                  duration: target.duration,
+                  playbackRate: target.playbackRate,
+                  position: target.currentTime,
+                });
+              }
             }
           });
 
-          this.handleEvent('play_audio', ({ url, title, author, image, duration }) => {
+          this.handleEvent('play_audio', ({ id, url, title, author, image, duration, current_time }) => {
+            episodeId = id;
             episodeTitle.textContent = title;
             podcastTitle.textContent = author;
 
@@ -58,23 +70,55 @@ defmodule PocaWeb.PlayerLive do
                 artwork: [{ src: image, sizes: '600x600', type: 'image/jpeg' }],
               });
 
-              navigator.mediaSession.setPositionState({
-                duration: 1.0 * duration,
-                playbackRate: 1,
-                position: 0,
-              });
+              if (duration > 0) {
+                navigator.mediaSession.setPositionState({
+                  duration: 1.0 * duration,
+                  playbackRate: 1,
+                  position: 1.0 * current_time,
+                });
+              }
             }
 
             audio.src = url;
+            audio.currentTime = current_time;
             audio.play();
           });
-        }
+        },
+
+        savePlaybackProgress(episodeId, currentTime, duration) {
+          if (!episodeId) return;
+
+          const now = Date.now();
+
+          if (now - lastPlaybackSavedAt > 10000) {
+            lastPlaybackSavedAt = now;
+
+            this.pushEvent("save_playback_progress", {
+              episode_id: episodeId,
+              current_time: currentTime,
+              duration: duration,
+            });
+          }
+        },
       };
     </script>
     """
   end
 
-  def mount(_params, _session, socket) do
+  def mount(_params, %{"user_id" => user_id}, socket) do
+    socket = socket |> assign(:current_user, Accounts.get_user(user_id))
+
     {:ok, socket, layout: false}
+  end
+
+  def handle_event("save_playback_progress", params, socket) do
+    %{"episode_id" => episode_id, "current_time" => current_time, "duration" => duration} = params
+
+    user = socket.assigns.current_user
+    episode = Podcasts.get_episode(episode_id)
+
+    Podcasts.save_playback_progress(user, episode, current_time, duration)
+
+    {:noreply, socket}
   end
 end
