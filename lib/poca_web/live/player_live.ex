@@ -19,6 +19,9 @@ defmodule PocaWeb.PlayerLive do
       <audio id="audio-player" controls class="w-full h-12" />
     </div>
     <script :type={Phoenix.LiveView.ColocatedHook} name=".GlobalPlayer">
+      let episodeId = null;
+      let lastPlaybackSavedAt = 0;
+
       export default {
         mounted() {
           const audio = document.getElementById('audio-player');
@@ -38,6 +41,8 @@ defmodule PocaWeb.PlayerLive do
           });
 
           audio.addEventListener('timeupdate', ({ target }) => {
+            this.savePlaybackProgress(episodeId, target.currentTime);
+
             if ('mediaSession' in navigator && navigator.mediaSession.setPositionState) {
               navigator.mediaSession.setPositionState({
                 duration: target.duration,
@@ -47,7 +52,8 @@ defmodule PocaWeb.PlayerLive do
             }
           });
 
-          this.handleEvent('play_audio', ({ url, title, author, image, duration }) => {
+          this.handleEvent('play_audio', ({ id, url, title, author, image, duration }) => {
+            episodeId = id;
             episodeTitle.textContent = title;
             podcastTitle.textContent = author;
 
@@ -68,7 +74,18 @@ defmodule PocaWeb.PlayerLive do
             audio.src = url;
             audio.play();
           });
-        }
+        },
+
+        savePlaybackProgress(episodeId, currentTime) {
+          if (!episodeId) return;
+
+          const now = Date.now();
+
+          if (now - lastPlaybackSavedAt > 10000) {
+            this.pushEvent("save_playback_progress", { episode_id: episodeId, current_time: currentTime });
+            lastPlaybackSavedAt = now;
+          }
+        },
       };
     </script>
     """
@@ -76,5 +93,11 @@ defmodule PocaWeb.PlayerLive do
 
   def mount(_params, _session, socket) do
     {:ok, socket, layout: false}
+  end
+
+  def handle_event("save_playback_progress", %{"episode_id" => episode_id, "current_time" => current_time}, socket) do
+    IO.inspect({:saving_progress, episode_id, current_time})
+
+    {:noreply, socket}
   end
 end

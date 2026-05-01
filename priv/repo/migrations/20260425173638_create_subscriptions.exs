@@ -11,6 +11,7 @@ defmodule Poca.Repo.Migrations.CreateSubscriptions do
     end
 
     create index(:subscriptions, [:inserted_at])
+
     create unique_index(:subscriptions, [:user_id, :podcast_id],
              name: "subscriptions_user_id_podcast_id_index"
            )
