@@ -23,13 +23,14 @@ defmodule Poca.Podcasts.Itunes do
   end
 
   def search(query) do
-    request = [
+    [
       url: "https://itunes.apple.com/search",
       params: [term: query, media: "podcast", entity: "podcast", limit: 120],
       receive_timeout: 5_000
     ]
-
-    case Req.get(request) do
+    |> Keyword.merge(Application.get_env(:poca, :itunes_req_opts, []))
+    |> Req.request()
+    |> case do
       {:ok, response} ->
         {:ok, build_entries(response)}
 

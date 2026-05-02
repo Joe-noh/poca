@@ -7,12 +7,11 @@ defmodule Poca.PodcastsTest do
 
   describe "refresh_podcast/2" do
     setup do
-      feed = Fixtures.feed_fixture()
-      Req.Test.stub(Poca.Podcasts.FeedTestPlug, fn conn -> Req.Test.text(conn, feed) end)
+      Req.Test.stub(Poca.Podcasts.FeedTestPlug, fn conn ->
+        Req.Test.text(conn, Fixtures.feed_fixture())
+      end)
 
-      {:ok, %{user: user}} = Poca.Accounts.signup_with_google("12345")
-
-      {:ok, %{user: user, feed: feed}}
+      Poca.Accounts.signup_with_google("12345")
     end
 
     test "fetches and updates podcast feed data" do
