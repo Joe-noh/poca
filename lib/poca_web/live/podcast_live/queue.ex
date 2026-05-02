@@ -1,8 +1,6 @@
-defmodule PocaWeb.PodcastLive.Listen do
+defmodule PocaWeb.PodcastLive.Queue do
   use PocaWeb, :live_view
   use PocaWeb.Viewport
-
-  alias Poca.Podcasts
 
   @impl true
   def render(assigns) do
@@ -21,11 +19,9 @@ defmodule PocaWeb.PodcastLive.Listen do
 
   @impl true
   def mount(_params, _session, socket) do
-    current_user = socket.assigns.current_user
-
     socket =
       socket
-      |> assign_async(:episodes, fn -> Podcasts.subscribed_episodes(current_user) end)
+      |> assign_async(:episodes, fn -> {:ok, %{episodes: []}} end)
       |> attach_hook(:play_episode, :handle_event, &PocaWeb.PodcastLive.hooked_event/3)
 
     {:ok, socket}

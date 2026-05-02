@@ -21,4 +21,10 @@ defmodule Poca.Podcasts.Playback do
     |> validate_required([:current_time, :duration])
     |> unique_constraint(:user_id, name: "playbacks_user_id_episode_id_index")
   end
+
+  def progress(%__MODULE__{current_time: current_time, duration: duration}) when duration > 0 do
+    round(current_time / duration * 100)
+  end
+
+  def progress(_), do: 0
 end

@@ -5,6 +5,8 @@ defmodule PocaWeb.PodcastLive do
 
   use PocaWeb, :live_view
 
+  alias Poca.Podcasts
+
   def render("with_player.html", assigns) do
     ~H"""
     <div>
@@ -23,6 +25,28 @@ defmodule PocaWeb.PodcastLive do
 
     {:cont, socket}
   end
+
+  def hooked_event("play_episode", %{"id" => episode_id}, socket) do
+    episode = Podcasts.get_episode(episode_id)
+    playback = Podcasts.get_playback(episode, socket.assigns.current_user)
+
+    socket =
+      socket
+      |> assign(:current_episode, episode)
+      |> push_event("play_audio", %{
+        id: episode.id,
+        url: episode.audio_url,
+        title: episode.title,
+        author: episode.podcast.title,
+        image: episode.podcast.artwork_url,
+        duration: episode.duration,
+        current_time: (playback && playback.current_time) || 0
+      })
+
+    {:halt, socket}
+  end
+
+  def hooked_event(_event, _params, socket), do: {:cont, socket}
 
   defp set_active_tab(_params, _url, socket) do
     active_tab =
