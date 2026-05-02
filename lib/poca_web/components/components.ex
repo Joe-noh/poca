@@ -7,6 +7,8 @@ defmodule PocaWeb.Components do
 
   import PocaWeb.CoreComponents
 
+  alias Poca.Podcasts
+
   @doc "Mobile tab bar component"
   slot :item, required: true do
     attr :label, :string
@@ -94,6 +96,32 @@ defmodule PocaWeb.Components do
     """
   end
 
+  attr :episode, Podcasts.Episode, required: true
+
+  def episode_entry(assigns) do
+    ~H"""
+    <div
+      id={"episode-#{@episode.id}"}
+      class="flex flex-row items-start gap-4 py-2.5 w-full cursor-pointer border-b border-hairline"
+      phx-click="play_episode"
+      phx-value-id={@episode.id}
+    >
+      <img src={@episode.podcast.artwork_url} alt={@episode.title} class="w-12 h-12 bg-hairline rounded-md" />
+      <div class="flex flex-col justify-between w-full h-full gap-0.5">
+        <span class="text-base font-sans text-ink">{@episode.title}</span>
+        <div class="flex flex-row justify-between items-end">
+          <.episode_published_at episode={@episode} />
+          <div class="flex flex-col">
+            <.playback_progress episode={@episode} />
+          </div>
+        </div>
+      </div>
+    </div>
+    """
+  end
+
+  attr :episode, Podcasts.Episode, required: true
+
   def episode_published_at(assigns) do
     ~H"""
     <span id={"episode-#{@episode.id}-published-at"} class="text-sm font-sans text-muted" phx-hook=".EpisodePublishedAt" data-value={@episode.published_at} />
@@ -115,6 +143,17 @@ defmodule PocaWeb.Components do
         }
       };
     </script>
+    """
+  end
+
+  attr :episode, Podcasts.Episode, required: true
+
+  def playback_progress(assigns) do
+    ~H"""
+    <span class="text-sm font-sans text-muted">{Podcasts.Episode.format_duration(@episode)}</span>
+    <div class="relative w-full h-0.5 rounded-md bg-hairline mt-1">
+      <div class="absolute top-0 left-0 h-0.5 rounded-md bg-muted" style={"width: '#{Podcasts.Playback.progress(@episode.playback)}%'"}></div>
+    </div>
     """
   end
 end

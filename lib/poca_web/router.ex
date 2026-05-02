@@ -29,6 +29,7 @@ defmodule PocaWeb.Router do
     live_session :with_player, layout: {PocaWeb.PodcastLive, :with_player}, on_mount: [{PocaWeb.UserAuth, :require_login}, PocaWeb.PodcastLive] do
       live "/listen", PodcastLive.Listen
       live "/library", PodcastLive.Library
+      live "/queue", PodcastLive.Queue
       live "/search", PodcastLive.Search
       live "/search/:id", PodcastLive.Search, :show
     end

@@ -1,4 +1,8 @@
 defmodule Poca.RefreshFeedWorker do
+  @moduledoc """
+  An Oban worker that refreshes podcast feeds for all subscribed podcasts.
+  """
+
   use Oban.Worker, queue: :default
 
   alias Poca.{Podcasts, Repo}
