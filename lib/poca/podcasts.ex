@@ -93,7 +93,7 @@ defmodule Poca.Podcasts do
   end
 
   def create_podcast(attrs \\ %{}) do
-    case get_podcast_by_feed_url(attrs["feed_url"]) do
+    case get_podcast_by_feed_url(attrs[:feed_url]) do
       nil ->
         Multi.new()
         |> Multi.insert(:podcast, Podcast.changeset(%Podcast{}, attrs), returning: true, on_conflict: :nothing, conflict_target: :feed_url)

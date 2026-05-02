@@ -19,6 +19,7 @@ defmodule Poca.DataCase do
   using do
     quote do
       alias Poca.Repo
+      alias Poca.Fixtures
 
       import Ecto
       import Ecto.Changeset

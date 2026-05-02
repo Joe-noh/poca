@@ -41,8 +41,6 @@ defmodule Poca.Podcasts.Episode do
     end
   end
 
-  def format_duration(_), do: "0:00"
-
   defp pad_zero(value) when value < 10, do: "0#{value}"
   defp pad_zero(value), do: "#{value}"
 end

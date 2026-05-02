@@ -15,7 +15,8 @@ config :poca, PocaWeb.Endpoint,
 
 config :poca, Oban, testing: :manual
 
-config :poca, :feed_req_opts, plug: {Req.Test, Poca.Podcasts.FeedTestPlug}
+config :poca, :feed_req_opts, plug: {Req.Test, Poca.Podcasts.FeedTestPlug}, retry: false
+config :poca, :itunes_req_opts, plug: {Req.Test, Poca.Podcasts.ItunesTestPlug}, retry: false
 
 config :logger, level: :warning
 
