@@ -15,7 +15,7 @@ defmodule Poca.PodcastsTest do
     end
 
     test "fetches and updates podcast feed data" do
-      {:ok, %{podcast: podcast}} = Podcasts.create_podcast(%{"feed_url" => "http://example.com/feed"})
+      {:ok, %{podcast: podcast}} = Podcasts.create_podcast(%{feed_url: "http://example.com/feed"})
       {:ok, %{podcast: podcast}} = Podcasts.refresh_podcast(podcast)
 
       assert %{
@@ -65,7 +65,7 @@ defmodule Poca.PodcastsTest do
     setup do
       {:ok, %{user: user}} = Fixtures.signup_user(%{})
       {:ok, %{podcast: podcast}} = Fixtures.create_podcast(%{})
-      {:ok, %{episode: episode}} = Fixtures.create_episode(%{podcast: podcast})
+      {:ok, %{episode: episode}} = Fixtures.create_episode(podcast)
 
       {:ok, %{user: user, podcast: podcast, episode: episode}}
     end

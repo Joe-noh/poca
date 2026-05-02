@@ -104,7 +104,7 @@ defmodule PocaWeb.PodcastLive.Search do
   end
 
   def handle_event("open_podcast", %{"url" => url}, socket) do
-    {:ok, %{podcast: podcast}} = Podcasts.create_podcast(%{"feed_url" => url})
+    {:ok, %{podcast: podcast}} = Podcasts.create_podcast(%{feed_url: url})
     query = socket.assigns.form[:query].value || ""
 
     {:noreply, push_patch(socket, to: "/search/#{podcast.id}?query=#{query}")}

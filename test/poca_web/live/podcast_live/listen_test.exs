@@ -8,8 +8,14 @@ defmodule PocaWeb.PodcastLive.ListenTest do
   describe "/listen" do
     setup do
       {:ok, %{user: user}} = Fixtures.signup_user(%{})
-      {:ok, %{podcast: podcast}} = Fixtures.create_podcast(%{})
-      {:ok, %{episode: episode}} = Fixtures.create_episode(%{podcast: podcast})
+      {:ok, %{podcast: podcast}} = Fixtures.create_podcast(%{artwork_url: "https://example.com/artwork.jpg"})
+
+      {:ok, %{episode: episode}} =
+        Fixtures.create_episode(podcast, %{
+          title: "Happy new year!",
+          duration: 512
+        })
+
       {:ok, _} = Podcasts.subscribe(podcast, user)
 
       {:ok, %{user: user, podcast: podcast, episode: episode}}
@@ -17,13 +23,12 @@ defmodule PocaWeb.PodcastLive.ListenTest do
 
     test "renders subscribed episodes", %{conn: conn, user: user, episode: episode} do
       {:ok, view, _html} = conn |> put_connect_params(%{"viewport" => %{"width" => 720}}) |> login_user(user) |> live(~p"/listen")
-      html = render_async(view)
 
-      episode_html = LazyHTML.from_fragment(html) |> LazyHTML.query("#episode-#{episode.id}")
+      episode_html = render_async(view) |> LazyHTML.from_fragment() |> LazyHTML.query("#episode-#{episode.id}")
 
-      assert episode_html |> LazyHTML.query("img") |> LazyHTML.attribute("src") == ["https://example.com/thumbnail.jpg"]
-      assert episode_html |> LazyHTML.text() =~ ~r/Episode title/
-      assert episode_html |> LazyHTML.text() =~ ~r/20:30/
+      assert episode_html |> LazyHTML.query("img") |> LazyHTML.attribute("src") == ["https://example.com/artwork.jpg"]
+      assert episode_html |> LazyHTML.text() =~ ~r/Happy new year!/
+      assert episode_html |> LazyHTML.text() =~ ~r/8:32/
     end
 
     test "can play an episode", %{conn: conn, user: user, episode: %{id: episode_id}} do
