@@ -24,6 +24,8 @@ defmodule PocaWeb.ConnCase do
 
       use PocaWeb, :verified_routes
 
+      alias Poca.Fixtures
+
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest

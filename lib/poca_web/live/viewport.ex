@@ -9,13 +9,8 @@ defmodule PocaWeb.Viewport do
   defmacro __using__(_) do
     quote do
       def handle_event("viewport_resize", viewport, socket) do
-        socket =
-          if connected?(socket) do
-            device = viewport |> Map.get("width") |> PocaWeb.Viewport.device_type()
-            Phoenix.Component.assign(socket, :device, device)
-          else
-            socket
-          end
+        device = viewport |> Map.get("width") |> PocaWeb.Viewport.device_type()
+        Phoenix.Component.assign(socket, :device, device)
 
         {:noreply, socket}
       end

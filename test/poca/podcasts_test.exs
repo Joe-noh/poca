@@ -2,7 +2,7 @@ defmodule Poca.PodcastsTest do
   use Poca.DataCase, async: true
 
   alias Poca.Fixtures
-  alias Poca.{Podcasts, Accounts}
+  alias Poca.Podcasts
   alias Poca.Podcasts.Podcast
 
   describe "refresh_podcast/2" do
@@ -29,7 +29,12 @@ defmodule Poca.PodcastsTest do
   end
 
   describe "subscribe/1" do
-    setup [:signup_user, :create_podcast]
+    setup do
+      {:ok, %{user: user}} = Fixtures.signup_user(%{})
+      {:ok, %{podcast: podcast}} = Fixtures.create_podcast(%{})
+
+      {:ok, %{user: user, podcast: podcast}}
+    end
 
     test "inserts a subscription record", %{user: user, podcast: podcast} do
       assert {:ok, %{subscription: subscription}} = Podcasts.subscribe(podcast, user)
@@ -41,7 +46,12 @@ defmodule Poca.PodcastsTest do
   end
 
   describe "unsubscribe/1" do
-    setup [:signup_user, :create_podcast]
+    setup do
+      {:ok, %{user: user}} = Fixtures.signup_user(%{})
+      {:ok, %{podcast: podcast}} = Fixtures.create_podcast(%{})
+
+      {:ok, %{user: user, podcast: podcast}}
+    end
 
     test "deletes the subscription record", %{user: user, podcast: podcast} do
       assert {:ok, %{subscription: _subscription}} = Podcasts.subscribe(podcast, user)
@@ -52,7 +62,13 @@ defmodule Poca.PodcastsTest do
   end
 
   describe "subscribed_episodes/1" do
-    setup [:signup_user, :create_podcast, :create_episode]
+    setup do
+      {:ok, %{user: user}} = Fixtures.signup_user(%{})
+      {:ok, %{podcast: podcast}} = Fixtures.create_podcast(%{})
+      {:ok, %{episode: episode}} = Fixtures.create_episode(%{podcast: podcast})
+
+      {:ok, %{user: user, podcast: podcast, episode: episode}}
+    end
 
     setup %{user: user, podcast: podcast} do
       Podcasts.subscribe(podcast, user)
@@ -64,30 +80,5 @@ defmodule Poca.PodcastsTest do
       assert subscribed.id == episode.id
       assert subscribed.podcast.id == podcast.id
     end
-  end
-
-  defp signup_user(_) do
-    Accounts.signup_with_google("12345")
-  end
-
-  defp create_podcast(_) do
-    Podcasts.create_podcast(%{"feed_url" => "http://example.com/feed"})
-  end
-
-  defp create_episode(%{podcast: podcast}) do
-    {:ok, episode} =
-      podcast
-      |> Ecto.build_assoc(:episodes)
-      |> Ecto.Changeset.change(%{
-        guid: Ecto.UUID.generate(),
-        title: "Episode title",
-        description: "Episode description",
-        audio_url: "http://example.com/audio.mp3",
-        duration: 3600,
-        published_at: DateTime.utc_now()
-      })
-      |> Poca.Repo.insert()
-
-    {:ok, %{episode: episode}}
   end
 end

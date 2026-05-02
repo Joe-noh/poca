@@ -3,6 +3,38 @@ defmodule Poca.Fixtures do
   Test fixtures for the Poca application.
   """
 
+  alias Poca.{Accounts, Podcasts}
+
+  def signup_user(_) do
+    Accounts.signup_with_google("12345")
+  end
+
+  def create_podcast(_) do
+    Podcasts.create_podcast(%{
+      "title" => "I am Mr. Talk",
+      "author" => "Mr. Talk",
+      "feed_url" => "http://example.com/feed",
+      "artwork_url" => "https://example.com/thumbnail.jpg"
+    })
+  end
+
+  def create_episode(%{podcast: podcast}) do
+    {:ok, episode} =
+      podcast
+      |> Ecto.build_assoc(:episodes)
+      |> Ecto.Changeset.change(%{
+        guid: Ecto.UUID.generate(),
+        title: "Episode title",
+        description: "Episode description",
+        audio_url: "http://example.com/audio.mp3",
+        duration: 1230,
+        published_at: DateTime.utc_now()
+      })
+      |> Poca.Repo.insert()
+
+    {:ok, %{episode: episode}}
+  end
+
   def feed_fixture do
     """
     <?xml version="1.0" encoding="UTF-8"?>
