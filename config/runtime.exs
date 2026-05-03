@@ -19,7 +19,7 @@ if config_env() == :prod do
 
   config :poca, PocaWeb.Endpoint,
     url: [host: System.get_env("RENDER_EXTERNAL_HOSTNAME", "localhost"), port: 443, scheme: "https"],
-    http: [ip: {0, 0, 0, 0, 0, 0, 0, 0}, port: String.to_integer(System.get_env("PORT", "4000"))],
+    http: [ip: {0, 0, 0, 0}, port: String.to_integer(System.get_env("PORT", "4000"))],
     secret_key_base: System.fetch_env!("SECRET_KEY_BASE")
 
   config :ueberauth, Ueberauth.Strategy.Google.OAuth,
