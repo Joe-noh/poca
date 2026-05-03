@@ -18,6 +18,8 @@ defmodule Poca.DataCase do
 
   using do
     quote do
+      use Oban.Testing, repo: Poca.Repo
+
       alias Poca.Repo
       alias Poca.Fixtures
 

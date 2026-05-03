@@ -18,6 +18,6 @@ defmodule Poca.RefreshFeedWorker do
       {:ok, []}
     end)
 
-    {:ok, nil}
+    :ok
   end
 end
