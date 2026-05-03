@@ -18,7 +18,7 @@ if config_env() == :prod do
   config :poca, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
   config :poca, PocaWeb.Endpoint,
-    url: [host: System.get_env("PHX_HOST", "example.com"), port: 443, scheme: "https"],
+    url: [host: System.get_env("RENDER_EXTERNAL_HOSTNAME", "localhost"), port: 443, scheme: "https"],
     http: [ip: {0, 0, 0, 0, 0, 0, 0, 0}, port: String.to_integer(System.get_env("PORT", "4000"))],
     secret_key_base: System.fetch_env!("SECRET_KEY_BASE")
 
