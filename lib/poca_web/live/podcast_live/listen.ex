@@ -9,7 +9,7 @@ defmodule PocaWeb.PodcastLive.Listen do
     ~H"""
     <Layouts.app device={@device} active_tab={@active_tab} flash={@flash}>
       <.async_result :let={episodes} assign={@episodes}>
-        <div class="grid grid-cols-1 px-4">
+        <div class="grid grid-cols-1 px-4 py-2">
           <%= for episode <- episodes do %>
             <.episode_entry episode={episode} />
           <% end %>

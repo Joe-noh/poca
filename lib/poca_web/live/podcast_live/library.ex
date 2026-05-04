@@ -9,7 +9,7 @@ defmodule PocaWeb.PodcastLive.Library do
     ~H"""
     <Layouts.app device={@device} active_tab={@active_tab} flash={@flash}>
       <.async_result :let={podcasts} assign={@podcasts}>
-        <div class="grid grid-cols-1 px-4">
+        <div class="grid grid-cols-1 px-4 py-2">
           <%= for podcast <- podcasts do %>
             <div id={"podcast-#{podcast.id}"} class="flex flex-row items-start gap-4 py-2 w-full cursor-pointer border-b border-hairline">
               <img src={podcast.artwork_url} alt={podcast.title} class="w-12 h-12 bg-hairline rounded-md" />
