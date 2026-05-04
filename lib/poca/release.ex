@@ -1,4 +1,8 @@
 defmodule Poca.Release do
+  @moduledoc """
+  Handles database migrations during deployment.
+  """
+
   def migrate do
     Application.load(:poca)
 
