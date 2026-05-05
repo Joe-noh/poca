@@ -393,7 +393,7 @@ defmodule PocaWeb.CoreComponents do
   end
 
   attr :size, :string, default: "md", values: ~w(xs sm md lg)
-  attr :font, :string, default: "sans", values: ~w(sans serif mono)
+  attr :font, :string, default: "sans", values: ~w(sans)
   attr :color, :string, default: "ink", values: ~w(ink muted hairline)
   slot :inner_block, required: true
 
