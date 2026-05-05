@@ -1,6 +1,7 @@
 import { readFileSync } from "fs";
 import { defineConfig } from "vite";
 import { phoenixVitePlugin } from "phoenix_vite";
+import { svelte } from "@sveltejs/vite-plugin-svelte";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
@@ -16,7 +17,7 @@ export default defineConfig({
   build: {
     manifest: true,
     rollupOptions: {
-      input: ["js/app.js", "css/app.css"],
+      input: ["js/app.ts", "css/app.css"],
     },
     outDir: "../priv/static",
     emptyOutDir: true,
@@ -26,5 +27,5 @@ export default defineConfig({
       "~": ".",
     },
   },
-  plugins: [tailwindcss(), phoenixVitePlugin({ pattern: /\.(ex|heex)$/ })],
+  plugins: [svelte(), tailwindcss(), phoenixVitePlugin({ pattern: /\.(ex|heex)$/ })],
 });

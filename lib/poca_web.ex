@@ -42,6 +42,7 @@ defmodule PocaWeb do
       use Gettext, backend: PocaWeb.Gettext
 
       import Plug.Conn
+      import Inertia.Controller
 
       unquote(verified_routes())
     end
@@ -68,6 +69,7 @@ defmodule PocaWeb do
       use Phoenix.Component
 
       import Phoenix.Controller, only: [get_csrf_token: 0, view_module: 1, view_template: 1]
+      import Inertia.HTML
 
       unquote(html_helpers())
     end

@@ -8,8 +8,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet" />
     <link rel="manifest" href={static_url(@conn, "/manifest.json")} />
+    <.inertia_title>{assigns[:page_title]}</.inertia_title>
+    <.inertia_head content={@inertia_head} />
     <PhoenixVite.Components.assets
-      names={["js/app.js", "css/app.css"]}
+      names={["js/app.ts", "css/app.css"]}
       manifest={{:poca, "priv/static/.vite/manifest.json"}}
       dev_server={PhoenixVite.Components.has_vite_watcher?(PocaWeb.Endpoint)}
       to_url={fn p -> static_url(@conn, p) end}

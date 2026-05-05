@@ -1,10 +1,5 @@
-<script>
-  let { name } = $props();
-  let message = $state("");
-
-  $effect(() => {
-    message = `Hello, I'm ${name}`;
-  });
+<script lang="ts">
+  const { name } = $props();
 </script>
 
-<p>{message}</p>
+<p class="font-sans text-md">Prop `name` is {name}</p>

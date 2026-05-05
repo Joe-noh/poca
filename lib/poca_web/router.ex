@@ -11,6 +11,7 @@ defmodule PocaWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug PocaWeb.CurrentUserPlug
+    plug Inertia.Plug
   end
 
   pipeline :api do
@@ -26,8 +27,9 @@ defmodule PocaWeb.Router do
   scope "/", PocaWeb do
     pipe_through [:browser, :require_login]
 
+    get "/listen", ListenController, :index
+
     live_session :with_player, layout: {PocaWeb.PodcastLive, :with_player}, on_mount: [{PocaWeb.UserAuth, :require_login}, PocaWeb.PodcastLive] do
-      live "/listen", PodcastLive.Listen
       live "/library", PodcastLive.Library
       live "/queue", PodcastLive.Queue
       live "/search", PodcastLive.Search
