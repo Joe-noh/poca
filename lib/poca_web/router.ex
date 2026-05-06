@@ -20,6 +20,7 @@ defmodule PocaWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/manifest.json", PageController, :manifest
   end
 
   scope "/", PocaWeb do
