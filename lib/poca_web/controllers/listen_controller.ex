@@ -3,7 +3,8 @@ defmodule PocaWeb.ListenController do
 
   def index(conn, _params) do
     conn
-    |> assign_prop(:name, "John")
+    |> assign_prop(:episodes, [])
+    |> assign_prop(:active_tab, "listen")
     |> render_inertia("Listen")
   end
 end

@@ -1,8 +1,10 @@
-import { readFileSync } from "fs";
-import { defineConfig } from "vite";
-import { phoenixVitePlugin } from "phoenix_vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import tailwindcss from "@tailwindcss/vite";
+import { readFileSync } from "fs";
+import { resolve } from "path";
+import { phoenixVitePlugin } from "phoenix_vite";
+import { sveltePreprocess } from "svelte-preprocess";
+import { defineConfig } from "vite";
 
 export default defineConfig({
   server: {
@@ -24,7 +26,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "~": ".",
+      "~": resolve("./js"),
     },
   },
   plugins: [svelte(), tailwindcss(), phoenixVitePlugin({ pattern: /\.(ex|heex)$/ })],

@@ -1,4 +1,4 @@
 <script lang="ts">
 </script>
 
-<span>Listen</span>
+<span>Queue</span>

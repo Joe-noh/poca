@@ -1,3 +1,9 @@
 {
-  "ignorePatterns": ["cache_manifest.json"]
+  "ignorePatterns": ["cache_manifest.json"],
+  "sortImports": {
+    "groups": [["type-import", "value-import"]],
+    "type": "alphabetical",
+    "order": "asc",
+    "fallbackSort": { "type": "subgroup-order", "order": "asc" }
+  }
 }

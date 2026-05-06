@@ -1,8 +1,6 @@
 defmodule PocaWeb.Router do
   use PocaWeb, :router
 
-  import PocaWeb.UserAuth
-
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -14,8 +12,8 @@ defmodule PocaWeb.Router do
     plug Inertia.Plug
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
+  pipeline :require_login do
+    plug PocaWeb.RequireLoginPlug
   end
 
   scope "/", PocaWeb do
@@ -28,13 +26,9 @@ defmodule PocaWeb.Router do
     pipe_through [:browser, :require_login]
 
     get "/listen", ListenController, :index
-
-    live_session :with_player, layout: {PocaWeb.PodcastLive, :with_player}, on_mount: [{PocaWeb.UserAuth, :require_login}, PocaWeb.PodcastLive] do
-      live "/library", PodcastLive.Library
-      live "/queue", PodcastLive.Queue
-      live "/search", PodcastLive.Search
-      live "/search/:id", PodcastLive.Search, :show
-    end
+    get "/library", LibraryController, :index
+    get "/queue", QueueController, :index
+    get "/search", SearchController, :index
   end
 
   scope "/auth", PocaWeb do
@@ -44,11 +38,6 @@ defmodule PocaWeb.Router do
     get "/:provider/callback", AuthController, :callback
     delete "/logout", AuthController, :delete
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", PocaWeb do
-  #   pipe_through :api
-  # end
 
   # Enable LiveDashboard in development
   if Application.compile_env(:poca, :dev_routes) do
