@@ -7,7 +7,7 @@ defmodule PocaWeb.PlaybackController do
     conn |> json(%{})
   end
 
-  def update(conn, params = %{"episode_id" => episode_id}) do
+  def update(conn, %{"episode_id" => episode_id} = params) do
     %{"currentTime" => current_time, "duration" => duration} = params
 
     current_user = conn.assigns.current_user

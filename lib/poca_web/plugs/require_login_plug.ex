@@ -5,7 +5,7 @@ defmodule PocaWeb.RequireLoginPlug do
 
   def init(opts), do: opts
 
-  def call(conn = %Plug.Conn{assigns: %{current_user: nil}}, _opts) do
+  def call(%Plug.Conn{assigns: %{current_user: nil}} = conn, _opts) do
     conn
     |> Phoenix.Controller.redirect(to: "/")
     |> Plug.Conn.halt()

@@ -13,7 +13,7 @@ defmodule PocaWeb.ResourceJSON do
 
   def render(nil), do: nil
 
-  def render(episode = %Podcasts.Episode{}) do
+  def render(%Podcasts.Episode{} = episode) do
     %{
       id: episode.id,
       guid: episode.guid,
@@ -27,7 +27,7 @@ defmodule PocaWeb.ResourceJSON do
     }
   end
 
-  def render(podcast = %Podcasts.Podcast{}) do
+  def render(%Podcasts.Podcast{} = podcast) do
     %{
       id: podcast.id,
       title: podcast.title,
@@ -38,7 +38,7 @@ defmodule PocaWeb.ResourceJSON do
     }
   end
 
-  def render(playback = %Podcasts.Playback{}) do
+  def render(%Podcasts.Playback{} = playback) do
     %{
       id: playback.id,
       current_time: playback.current_time,

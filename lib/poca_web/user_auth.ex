@@ -5,8 +5,6 @@ defmodule PocaWeb.UserAuth do
 
   use PocaWeb, :verified_routes
 
-  alias Poca.Accounts
-
   def login_user(conn, user) do
     conn
     |> create_or_extend_session(user)
@@ -37,28 +35,5 @@ defmodule PocaWeb.UserAuth do
     conn
     |> Plug.Conn.configure_session(renew: true)
     |> Plug.Conn.clear_session()
-  end
-
-  def on_mount(:require_login, _params, session, socket) do
-    socket = Phoenix.Component.assign_new(socket, :current_user, fn -> Accounts.get_user(session["user_id"]) end)
-
-    if socket.assigns.current_user do
-      {:cont, socket}
-    else
-      {:halt, Phoenix.LiveView.redirect(socket, to: ~p"/")}
-    end
-  end
-
-  @doc """
-  Plug for routes that require the user to be authenticated.
-  """
-  def require_login(conn, _opts) do
-    if conn.assigns.current_user do
-      conn
-    else
-      conn
-      |> Phoenix.Controller.redirect(to: ~p"/")
-      |> Plug.Conn.halt()
-    end
   end
 end

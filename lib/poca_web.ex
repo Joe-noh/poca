@@ -25,7 +25,6 @@ defmodule PocaWeb do
 
       import Plug.Conn
       import Phoenix.Controller
-      import Phoenix.LiveView.Router
     end
   end
 
@@ -48,22 +47,6 @@ defmodule PocaWeb do
     end
   end
 
-  def live_view do
-    quote do
-      use Phoenix.LiveView
-
-      unquote(html_helpers())
-    end
-  end
-
-  def live_component do
-    quote do
-      use Phoenix.LiveComponent
-
-      unquote(html_helpers())
-    end
-  end
-
   def html do
     quote do
       use Phoenix.Component
@@ -80,11 +63,6 @@ defmodule PocaWeb do
       use Gettext, backend: PocaWeb.Gettext
 
       import Phoenix.HTML
-      import PocaWeb.CoreComponents
-      import PocaWeb.Components
-
-      alias Phoenix.LiveView.JS
-      alias PocaWeb.Layouts
 
       unquote(verified_routes())
     end
