@@ -5,6 +5,17 @@
 
   let lastPlaybackSavedAt = 0;
 
+  function handlePlay({ currentTarget }: AudioEvent) {
+    if ("mediaSession" in navigator) {
+      navigator.mediaSession.playbackState = "playing";
+      navigator.mediaSession.setPositionState({
+        duration: currentTarget.duration,
+        playbackRate: 1,
+        position: currentTarget.currentTime,
+      });
+    }
+  }
+
   function handlePause() {
     lastPlaybackSavedAt = savePlaybackProgress();
 
@@ -26,7 +37,7 @@
       lastPlaybackSavedAt = savePlaybackProgress();
     }
 
-    if ("mediaSession" in navigator && navigator.mediaSession.setPositionState) {
+    if ("mediaSession" in navigator) {
       if (currentTarget.duration > 0) {
         navigator.mediaSession.setPositionState({
           duration: currentTarget.duration,
@@ -36,40 +47,11 @@
       }
     }
   }
-
-  // this.handleEvent(
-  //   "play_audio",
-  //   ({ id, url, title, author, image, duration, current_time }) => {
-  //     episodeId = id;
-  //     episodeTitle.textContent = title;
-  //     podcastTitle.textContent = author;
-
-  //     if ("mediaSession" in navigator) {
-  //       navigator.mediaSession.metadata = new MediaMetadata({
-  //         title,
-  //         artist: author,
-  //         artwork: [{ src: image, sizes: "600x600", type: "image/jpeg" }],
-  //       });
-
-  //       if (duration > 0) {
-  //         navigator.mediaSession.setPositionState({
-  //           duration: 1.0 * duration,
-  //           playbackRate: 1,
-  //           position: 1.0 * current_time,
-  //         });
-  //       }
-  //     }
-
-  //     audio.src = url;
-  //     audio.currentTime = current_time;
-  //     audio.play();
-  //   },
-  // );
 </script>
 
 <div
   class={[
-    "flex flex-col justify-end gap-2 absolute bottom-12 left-0 right-0 bg-paper border-t border-hairline px-2.5 py-2",
+    "flex flex-col justify-end gap-2 absolute bottom-12 left-0 right-0 bg-paper border-t border-hairline px-2.5 py-2 z-20",
     "sm:bottom-0 sm:left-0 sm:right-0 sm:ml-60 sm:shadow-none sm:border-t sm:border-l-0 sm:border-r-0 sm:border-b-0",
   ]}
 >
@@ -85,6 +67,7 @@
     controls
     id="player"
     class="w-full h-12"
+    onplay={handlePlay}
     onpause={handlePause}
     onended={handleEnded}
     ontimeupdate={handleTimeUpdate}

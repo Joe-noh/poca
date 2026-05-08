@@ -16,10 +16,34 @@ export function playEpisode(episode: Episode) {
   let audioElement = getAudioElement();
 
   if (audioElement) {
+    const { audioUrl, playback } = episode;
+
     audioElement.pause();
-    audioElement.src = episode.audioUrl;
-    audioElement.currentTime = episode.playback?.currentTime || 0;
-    audioElement.play();
+    audioElement.src = audioUrl;
+
+    if (playback) {
+      if (playback.currentTime > playback.duration * 0.95) {
+        audioElement.currentTime = 0;
+      } else {
+        audioElement.currentTime = playback.currentTime || 0;
+      }
+    }
+
+    audioElement.addEventListener("canplay", () => audioElement.play(), { once: true });
+
+    if ("mediaSession" in navigator) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: episode.title,
+        artist: episode.podcast?.author || "",
+        album: episode.podcast?.title || "",
+        artwork: [
+          {
+            src: episode.podcast?.artworkUrl || "",
+            sizes: "600x600",
+          },
+        ],
+      });
+    }
 
     playerStore.update((state) => ({ ...state, episode }));
   }
