@@ -6,7 +6,6 @@ defmodule PocaWeb.Router do
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_root_layout, html: {PocaWeb.Layouts, :root}
-    plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug PocaWeb.CurrentUserPlug
     plug Inertia.Plug
@@ -30,6 +29,10 @@ defmodule PocaWeb.Router do
     get "/library", LibraryController, :index
     get "/queue", QueueController, :index
     get "/search", SearchController, :index
+
+    resources "/episodes", EpisodeController, only: [] do
+      resources "/playback", PlaybackController, only: [:update], singleton: true
+    end
   end
 
   scope "/auth", PocaWeb do

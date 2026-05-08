@@ -18,4 +18,12 @@ defmodule PocaWeb.PageControllerTest do
       assert redirected_to(conn) == ~p"/listen"
     end
   end
+
+  describe "GET /manifest.json" do
+    test "returns manifest json", %{conn: conn} do
+      conn = conn |> get(~p"/manifest.json")
+
+      assert %{"name" => "POCA"} = json_response(conn, 200)
+    end
+  end
 end

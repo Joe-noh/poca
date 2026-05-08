@@ -19,7 +19,7 @@ defmodule PocaWeb.PageController do
       theme_color: "#141810",
       icons: [
         %{
-          src: static_path(conn, "/images/icons/256.png"),
+          src: static_url(conn, "/images/icons/256.png"),
           sizes: "256x256",
           type: "image/png"
         }

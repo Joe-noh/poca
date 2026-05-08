@@ -11,6 +11,7 @@ config :poca, Poca.Repo,
 config :poca, PocaWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
   secret_key_base: "CNbLNWsU40xXd6rLqraAUqCLCqJ8auCwI/JqMVN90N76Dsj/nbmnRNbpqY7r4RDd",
+  watchers: [vite: {PhoenixVite.Npm, :run, [:vite, ~w(dev)]}],
   server: false
 
 config :poca, Oban, testing: :manual

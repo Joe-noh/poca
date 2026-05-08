@@ -1,4 +1,11 @@
 <script lang="ts">
+  import EpisodeList from "~/components/EpisodeList/EpisodeList.svelte";
+
+  type Props = {
+    episodes: Episode[];
+  };
+
+  const { episodes }: Props = $props();
 </script>
 
-<span>Listen</span>
+<EpisodeList {episodes} />
