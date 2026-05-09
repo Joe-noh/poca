@@ -28,7 +28,7 @@
 
 <button
   type="button"
-  class="flex flex-row text-left items-start gap-4 w-full cursor-pointer"
+  class="flex flex-row text-left items-start gap-4 p-1 w-full rounded-sm cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink transition-colors"
   onclick={handleClick}
 >
   <img

@@ -7,12 +7,14 @@
 
   function handlePlay({ currentTarget }: AudioEvent) {
     if ("mediaSession" in navigator) {
-      navigator.mediaSession.playbackState = "playing";
-      navigator.mediaSession.setPositionState({
-        duration: currentTarget.duration,
-        playbackRate: 1,
-        position: currentTarget.currentTime,
-      });
+      if (currentTarget.duration > 0) {
+        navigator.mediaSession.playbackState = "playing";
+        navigator.mediaSession.setPositionState({
+          duration: currentTarget.duration,
+          playbackRate: 1,
+          position: currentTarget.currentTime,
+        });
+      }
     }
   }
 

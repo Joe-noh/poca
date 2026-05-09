@@ -18,7 +18,6 @@ export function playEpisode(episode: Episode) {
   if (audioElement) {
     const { audioUrl, playback } = episode;
 
-    audioElement.pause();
     audioElement.src = audioUrl;
 
     if (playback) {
@@ -46,6 +45,18 @@ export function playEpisode(episode: Episode) {
     }
 
     playerStore.update((state) => ({ ...state, episode }));
+  }
+}
+
+export function togglePlay() {
+  const audioElement = getAudioElement();
+
+  if (audioElement) {
+    if (audioElement.paused) {
+      audioElement.play();
+    } else {
+      audioElement.pause();
+    }
   }
 }
 
