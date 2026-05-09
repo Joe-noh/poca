@@ -20,7 +20,8 @@ if config_env() == :prod do
   config :poca, PocaWeb.Endpoint,
     url: [host: System.get_env("RENDER_EXTERNAL_HOSTNAME", "localhost"), port: 443, scheme: "https"],
     http: [ip: {0, 0, 0, 0}, port: String.to_integer(System.get_env("PORT", "4000"))],
-    secret_key_base: System.fetch_env!("SECRET_KEY_BASE")
+    secret_key_base: System.fetch_env!("SECRET_KEY_BASE"),
+    cache_static_manifest_latest: PhoenixVite.cache_static_manifest_latest(:poca)
 
   config :ueberauth, Ueberauth.Strategy.Google.OAuth,
     client_id: System.get_env("GOOGLE_CLIENT_ID"),

@@ -3,19 +3,8 @@
 @source "../js";
 @source "../../lib/poca_web";
 
-/* Add variants based on LiveView classes */
-@custom-variant phx-click-loading (.phx-click-loading&, .phx-click-loading &);
-@custom-variant phx-submit-loading (.phx-submit-loading&, .phx-submit-loading &);
-@custom-variant phx-change-loading (.phx-change-loading&, .phx-change-loading &);
-
 /* Use the data attribute for dark mode  */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
-
-/* Make LiveView wrapper divs transparent for layout */
-[data-phx-session],
-[data-phx-teleported-src] {
-  display: contents;
-}
 
 @theme {
   --color-paper: #f4f0ea;
@@ -26,8 +15,6 @@
   --color-hairline2: #c9c1b1;
   --color-paper-hover: #ece6d5;
   --font-sans: "Noto Sans JP", -apple-system, sans-serif;
-  --font-serif: "Noto Serif JP", Georgia, serif;
-  --font-mono: "Noto Sans Mono", Consolas, Courier, monospace;
   --text-xs: 9px;
   --text-sm: 11px;
   --text-base: 14px;

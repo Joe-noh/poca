@@ -30,10 +30,8 @@ config :poca, PocaWeb.Endpoint,
       ~r"lib/poca_web/(controllers|live|components)/.*\.(ex|heex)$"E
     ]
   ],
-  watchers: [
-    esbuild: {Esbuild, :install_and_run, [:poca, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:poca, ~w(--watch)]}
-  ]
+  watchers: [vite: {PhoenixVite.Npm, :run, [:vite, ~w(dev)]}],
+  static_url: [host: "localhost", port: 5173]
 
 # ## SSL Support
 #
@@ -64,10 +62,5 @@ config :logger, :default_formatter, format: "[$level] $message\n"
 
 config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
-
-config :phoenix_live_view,
-  debug_heex_annotations: true,
-  debug_attributes: true,
-  enable_expensive_runtime_checks: true
 
 import_config "dev.secret.exs"

@@ -1,37 +1,37 @@
 defmodule PocaWeb.Router do
   use PocaWeb, :router
 
-  import PocaWeb.UserAuth
-
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
-    plug :fetch_live_flash
+    plug :fetch_flash
     plug :put_root_layout, html: {PocaWeb.Layouts, :root}
-    plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug PocaWeb.CurrentUserPlug
+    plug Inertia.Plug
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
+  pipeline :require_login do
+    plug PocaWeb.RequireLoginPlug
   end
 
   scope "/", PocaWeb do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/manifest.json", PageController, :manifest
   end
 
   scope "/", PocaWeb do
     pipe_through [:browser, :require_login]
 
-    live_session :with_player, layout: {PocaWeb.PodcastLive, :with_player}, on_mount: [{PocaWeb.UserAuth, :require_login}, PocaWeb.PodcastLive] do
-      live "/listen", PodcastLive.Listen
-      live "/library", PodcastLive.Library
-      live "/queue", PodcastLive.Queue
-      live "/search", PodcastLive.Search
-      live "/search/:id", PodcastLive.Search, :show
+    get "/listen", ListenController, :index
+    get "/library", LibraryController, :index
+    get "/queue", QueueController, :index
+    get "/search", SearchController, :index
+
+    resources "/episodes", EpisodeController, only: [] do
+      resources "/playback", PlaybackController, only: [:update], singleton: true
     end
   end
 
@@ -43,28 +43,9 @@ defmodule PocaWeb.Router do
     delete "/logout", AuthController, :delete
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", PocaWeb do
-  #   pipe_through :api
-  # end
-
-  # Enable LiveDashboard in development
   if Application.compile_env(:poca, :dev_routes) do
-    # If you want to use the LiveDashboard in production, you should put
-    # it behind authentication and allow only admins to access it.
-    # If your application does not have an admins-only section yet,
-    # you can use Plug.BasicAuth to set up some basic authentication
-    # as long as you are also using SSL (which you should anyway).
-    import Phoenix.LiveDashboard.Router
-
     scope "/", PocaWeb do
       get "/.well-known/appspecific/com.chrome.devtools.json", PageController, :chrome_devtools
-    end
-
-    scope "/dev" do
-      pipe_through :browser
-
-      live_dashboard "/dashboard", metrics: PocaWeb.Telemetry
     end
   end
 end
