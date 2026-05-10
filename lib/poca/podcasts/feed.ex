@@ -25,9 +25,13 @@ defmodule Poca.Podcasts.Feed do
   end
 
   defp get(url) do
-    [url: url]
-    |> Keyword.merge(Application.get_env(:poca, :feed_req_opts, []))
-    |> Req.request()
+    try do
+      [url: url]
+      |> Keyword.merge(Application.get_env(:poca, :feed_req_opts, []))
+      |> Req.request()
+    rescue
+      e -> {:error, e}
+    end
   end
 
   def parse_pub_date(pub_date) do

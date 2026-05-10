@@ -19,6 +19,13 @@ defmodule Poca.Accounts do
     |> Repo.one()
   end
 
+  def login_with_google(uid) do
+    case get_user_by_google_uid(uid) do
+      nil -> {:error, :user_not_found}
+      user -> {:ok, %{user: user}}
+    end
+  end
+
   def signup_with_google(uid) do
     with {:existing, nil} <- {:existing, get_user_by_google_uid(uid)},
          {:ok, user} <- do_signup_with_google(uid) do

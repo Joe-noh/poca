@@ -102,7 +102,7 @@ export function playEpisode(episode: Episode) {
     audio.src = audioUrl;
 
     if (playback) {
-      if (playback.currentTime > playback.duration * 0.95) {
+      if (playback.currentTime > playback.duration * 0.99) {
         audio.currentTime = 0;
       } else {
         audio.currentTime = playback.currentTime || 0;

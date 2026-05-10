@@ -34,7 +34,8 @@ defmodule PocaWeb.ResourceJSON do
       author: podcast.author,
       description: podcast.description,
       link: podcast.link,
-      artwork_url: podcast.artwork_url
+      artwork_url: podcast.artwork_url,
+      subscribed: podcast.subscribers != [],
     }
   end
 
@@ -45,5 +46,9 @@ defmodule PocaWeb.ResourceJSON do
       duration: playback.duration,
       progress: Podcasts.Playback.progress(playback)
     }
+  end
+
+  def render(%Ecto.Association.NotLoaded{}) do
+    nil
   end
 end

@@ -28,8 +28,11 @@ defmodule PocaWeb.Router do
     get "/listen", ListenController, :index
     get "/library", LibraryController, :index
     get "/queue", QueueController, :index
-    get "/search", SearchController, :index
 
+    resources "/search", SearchController, only: [:show, :create], singleton: true
+    resources "/podcasts", PodcastController, only: [:show] do
+      resources "/subscription", SubscriptionController, only: [:create, :delete], singleton: true
+    end
     resources "/episodes", EpisodeController, only: [] do
       resources "/playback", PlaybackController, only: [:update], singleton: true
     end

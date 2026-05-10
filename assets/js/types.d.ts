@@ -5,6 +5,7 @@ type Podcast = {
   description: string;
   link: string;
   artworkUrl: string;
+  subscribed: boolean;
 };
 
 type Episode = {
@@ -24,6 +25,14 @@ type Playback = {
   currentTime: number;
   duration: number;
   progress: number;
+};
+
+type SearchResultEntry = {
+  id: string;
+  collectionId: string;
+  collectionName: string;
+  artistName: string;
+  artworkUrl600: string;
 };
 
 declare module "*.svg" {

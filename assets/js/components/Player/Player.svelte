@@ -1,7 +1,16 @@
 <script lang="ts">
+  import { derived } from "svelte/store";
   import { PlayIcon, PauseIcon } from "phosphor-svelte";
   import { formatDuration } from "~/lib/formatter";
   import { playerStore, togglePlay } from "~/stores/player";
+
+  const rate = derived(playerStore, ({ audio }) => {
+    if (audio?.currentTime && audio?.duration) {
+      return Math.round((1000 * audio.currentTime) / audio.duration) / 10;
+    } else {
+      return 0;
+    }
+  });
 </script>
 
 {#if $playerStore.episode}
@@ -29,11 +38,8 @@
         type="range"
         value={$playerStore.audio?.currentTime}
         max={$playerStore.audio?.duration}
-        class={[
-          "w-full h-3 flex-1 appearance-none bg-transparent outline-none cursor-pointer",
-          "[&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-hairline [&::-webkit-slider-runnable-track]:h-1",
-          "[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:-mt-1 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-ink",
-        ]}
+        style={"--rate: " + $rate + "%"}
+        class="w-full h-3 flex-1 appearance-none outline-none cursor-pointer"
       />
       <p class="text-base font-sans text-ink">
         {formatDuration(Math.round($playerStore.currentTime))} / {formatDuration(Math.round($playerStore.duration))}
@@ -45,3 +51,20 @@
     </div>
   </div>
 {/if}
+
+<style>
+  input[type="range"]::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg, var(--color-ink) var(--rate), var(--color-hairline) var(--rate));
+    border-radius: calc(0.5 * var(--spacing));
+    height: var(--spacing);
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: calc(3 * var(--spacing));
+    height: calc(3 * var(--spacing));
+    margin-top: calc(-1 * var(--spacing));
+    border-radius: 50%;
+    background: var(--color-ink);
+  }
+</style>

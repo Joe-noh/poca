@@ -106,7 +106,7 @@ defmodule Poca.Podcasts do
 
   def update_podcast(%Podcast{} = podcast, attrs) do
     Multi.new()
-    |> Multi.update(:podcast, Podcast.changeset(podcast, attrs))
+    |> Multi.insert(:podcast, Podcast.changeset(podcast, attrs), returning: true, on_conflict: {:replace_all_except, [:id, :feed_url]}, conflict_target: :feed_url)
     |> Repo.transact()
   end
 
@@ -116,16 +116,18 @@ defmodule Poca.Podcasts do
   def refresh_podcast(%Podcast{feed_url: feed_url} = podcast) do
     case Feed.fetch(feed_url) do
       {:ok, feed} ->
-        %{"title" => title, "description" => description, "link" => link, "itunes_ext" => ext} = feed
-        %{"author" => author, "image" => image} = ext
-
-        update_podcast(podcast, %{
-          title: title,
-          author: author,
-          description: description,
-          link: link,
-          artwork_url: image
-        })
+        with %{"title" => title, "description" => description, "link" => link, "itunes_ext" => ext} <- feed,
+             %{"author" => author, "image" => image} <- ext do
+          update_podcast(podcast, %{
+            title: title,
+            author: author,
+            description: description,
+            link: link,
+            artwork_url: image
+          })
+        else
+          _ -> {:error, :invalid_feed}
+        end
 
       {:error, reason} ->
         {:error, reason}
@@ -198,6 +200,29 @@ defmodule Poca.Podcasts do
 
   def get_episode(id) do
     Episode |> where([e], e.id == ^id) |> preload(:podcast) |> Repo.one()
+  end
+
+  def list_episodes(%Podcast{id: podcast_id}, opts \\ []) do
+    query =
+      Episode
+      |> join(:inner, [e], p in assoc(e, :podcast), as: :podcast)
+      |> preload([e, podcast: p], podcast: p)
+      |> where([e], e.podcast_id == ^podcast_id)
+      |> order_by([e], desc: e.published_at)
+      |> limit(100)
+
+    query =
+      case Keyword.get(opts, :user) do
+        %User{id: user_id} ->
+          query
+          |> join(:left, [e], pb in Playback, on: pb.episode_id == e.id and pb.user_id == ^user_id, as: :playback)
+          |> preload([e, playback: pb], playback: pb)
+
+        nil ->
+          query
+      end
+
+    Repo.all(query)
   end
 
   def subscribed_episodes(%User{id: user_id}) do

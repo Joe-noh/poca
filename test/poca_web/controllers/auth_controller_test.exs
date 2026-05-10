@@ -13,8 +13,8 @@ defmodule PocaWeb.AuthControllerTest do
       |> assign(:ueberauth_auth, %Ueberauth.Auth{provider: :google, uid: "12345"})
       |> get(~p"/auth/google/callback")
 
-    assert get_session(conn, :user_id) |> is_binary()
-    assert redirected_to(conn) == ~p"/listen"
+    assert get_session(conn, :user_id) |> is_nil()
+    assert redirected_to(conn) == ~p"/"
   end
 
   describe "DELETE /auth/logout" do
