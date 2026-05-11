@@ -1,3 +1,7 @@
+<script lang="ts" module>
+  export { default as layout } from "~/components/Layout/Layout.svelte";
+</script>
+
 <script lang="ts">
   import { router } from "@inertiajs/svelte";
   import { MagnifyingGlassIcon } from "phosphor-svelte";

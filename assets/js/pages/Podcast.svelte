@@ -1,3 +1,7 @@
+<script lang="ts" module>
+  export { default as layout } from "~/components/Layout/Layout.svelte";
+</script>
+
 <script lang="ts">
   import { CheckIcon, PlusIcon } from "phosphor-svelte";
   import EpisodeList from "~/components/EpisodeList/EpisodeList.svelte";
