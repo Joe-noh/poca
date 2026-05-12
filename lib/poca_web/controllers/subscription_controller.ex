@@ -12,7 +12,6 @@ defmodule PocaWeb.SubscriptionController do
         {:ok, _} = Podcasts.subscribe(podcast, conn.assigns.current_user)
         podcast = Podcasts.get_podcast(podcast_id, user: conn.assigns.current_user)
 
-
         conn |> json(PocaWeb.ResourceJSON.render(podcast))
     end
   end

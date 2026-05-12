@@ -14,6 +14,9 @@ importers:
       es-toolkit:
         specifier: ^1.45.1
         version: 1.46.1
+      sv-router:
+        specifier: ^0.16.0
+        version: 0.16.0(svelte@5.55.5)
       svelte:
         specifier: ^5.55.5
         version: 5.55.5
@@ -773,6 +776,12 @@ packages:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
 
+  sv-router@0.16.0:
+    resolution: {integrity: sha512-x5SiV6Hp6GRmGXAgu1H4g/x9oKhVIMeUwYodA+QF1JdzcWsCXsOGyWjcwjSNR+Mw2iiculGPynpys8MfA6PJRA==}
+    hasBin: true
+    peerDependencies:
+      svelte: ^5
+
   svelte-dev-helper@1.1.9:
     resolution: {integrity: sha512-oU+Xv7Dl4kRU2kdFjsoPLfJfnt5hUhsFUZtuzI3Ku/f2iAFZqBoEuXOqK3N9ngD4dxQOmN4OKWPHVi3NeAeAfQ==}
 
@@ -1463,6 +1472,11 @@ snapshots:
       side-channel-weakmap: 1.0.2
 
   source-map-js@1.2.1: {}
+
+  sv-router@0.16.0(svelte@5.55.5):
+    dependencies:
+      esm-env: 1.2.2
+      svelte: 5.55.5
 
   svelte-dev-helper@1.1.9: {}
 

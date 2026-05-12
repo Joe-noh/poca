@@ -20,7 +20,7 @@ export default defineConfig({
     rollupOptions: {
       input: ["js/app.ts", "css/app.css"],
     },
-    outDir: "../priv/static",
+    outDir: "../priv/static/assets",
     emptyOutDir: true,
   },
   resolve: {

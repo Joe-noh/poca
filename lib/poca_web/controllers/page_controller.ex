@@ -9,6 +9,10 @@ defmodule PocaWeb.PageController do
     end
   end
 
+  def spa(conn, _params) do
+    render(conn, :spa)
+  end
+
   def manifest(conn, _params) do
     json(conn, %{
       name: "POCA",
