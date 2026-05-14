@@ -13,7 +13,7 @@
       names={["js/app.ts", "css/app.css"]}
       manifest={{:poca, "priv/static/assets/.vite/manifest.json"}}
       dev_server={PhoenixVite.Components.has_vite_watcher?(PocaWeb.Endpoint)}
-      to_url={fn p -> static_url(@conn, p) end}
+      to_url={fn p -> static_url(@conn, "/assets#{p}") end}
     />
     <style>
       audio::-webkit-media-controls-panel {

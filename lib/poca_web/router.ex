@@ -41,6 +41,12 @@ defmodule PocaWeb.Router do
     resources "/playback", PlaybackController, only: [:update], singleton: true
   end
 
+  if Application.compile_env(:poca, :dev_routes) do
+    scope "/", PocaWeb do
+      get "/.well-known/appspecific/com.chrome.devtools.json", PageController, :chrome_devtools
+    end
+  end
+
   scope "/", PocaWeb do
     pipe_through [:browser, :require_login]
 
@@ -58,11 +64,5 @@ defmodule PocaWeb.Router do
     end
 
     get "/*path", PageController, :spa
-  end
-
-  if Application.compile_env(:poca, :dev_routes) do
-    scope "/", PocaWeb do
-      get "/.well-known/appspecific/com.chrome.devtools.json", PageController, :chrome_devtools
-    end
   end
 end
