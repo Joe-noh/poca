@@ -6,6 +6,7 @@ import { phoenixVitePlugin } from "phoenix_vite";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  base: "/assets/",
   server: {
     port: 5173,
     strictPort: true,
@@ -22,6 +23,7 @@ export default defineConfig({
     },
     outDir: "../priv/static/assets",
     emptyOutDir: true,
+    copyPublicDir: false,
   },
   resolve: {
     alias: {
