@@ -43,7 +43,7 @@ defmodule PocaWeb.Router do
       resources "/subscription", SubscriptionController, only: [:create, :delete], singleton: true
     end
 
-    resources "/episodes", EpisodeController, only: [] do
+    resources "/episodes", EpisodeController, only: [:index] do
       resources "/playback", PlaybackController, only: [:update], singleton: true
     end
   end
