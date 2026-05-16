@@ -1,7 +1,3 @@
-<script lang="ts" module>
-  export { default as layout } from "~/components/Layout/Layout.svelte";
-</script>
-
 <script lang="ts">
   import EpisodeList from "~/components/EpisodeList/EpisodeList.svelte";
 
@@ -12,5 +8,4 @@
   const { episodes }: Props = $props();
 </script>
 
-Listen
 <EpisodeList {episodes} />

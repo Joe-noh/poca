@@ -1,9 +1,9 @@
-defmodule PocaWeb.PlaybackControllerTest do
+defmodule PocaWeb.Api.PlaybackControllerTest do
   use PocaWeb.ConnCase, async: true
 
   alias Poca.Podcasts
 
-  describe "PUT /episodes/:episode_id/playback" do
+  describe "PUT /api/episodes/:episode_id/playback" do
     setup do
       {:ok, %{user: user}} = Fixtures.signup_user(%{})
       {:ok, %{podcast: podcast}} = Fixtures.create_podcast()
@@ -16,7 +16,7 @@ defmodule PocaWeb.PlaybackControllerTest do
       conn =
         conn
         |> login_user(user)
-        |> put(~p"/episodes/#{episode.id}/playback", %{currentTime: 10, duration: 100})
+        |> put(~p"/api/episodes/#{episode.id}/playback", %{currentTime: 10, duration: 100})
 
       assert json_response(conn, 200)
       assert %{current_time: 10.0, duration: 100.0} = Podcasts.get_playback(episode, user)
@@ -26,7 +26,7 @@ defmodule PocaWeb.PlaybackControllerTest do
       conn =
         conn
         |> login_user(user)
-        |> put(~p"/episodes/#{episode.id}/playback", %{currentTime: 10, duration: nil})
+        |> put(~p"/api/episodes/#{episode.id}/playback", %{currentTime: 10, duration: nil})
 
       assert json_response(conn, 200) == %{}
       assert Podcasts.get_playback(episode, user) == nil

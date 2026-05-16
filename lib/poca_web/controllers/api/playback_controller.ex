@@ -1,4 +1,4 @@
-defmodule PocaWeb.PlaybackController do
+defmodule PocaWeb.Api.PlaybackController do
   use PocaWeb, :controller
 
   alias Poca.Podcasts

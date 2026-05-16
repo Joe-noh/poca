@@ -1,24 +1,14 @@
-defmodule PocaWeb.SearchController do
+defmodule PocaWeb.Api.SearchController do
   use PocaWeb, :controller
 
   alias Poca.Podcasts
 
-  def show(conn, _params) do
-    conn
-    |> assign_prop(:active_tab, "search")
-    |> assign_prop(:podcasts, [])
-    |> render_inertia("Search")
-  end
-
   def create(conn, %{"q" => q}) do
-    conn
-    |> assign_prop(:active_tab, "search")
-    |> search(q)
-    |> render_inertia("Search")
+    conn |> search(q)
   end
 
   defp search(conn, "") do
-    conn |> assign_prop(:podcasts, [])
+    conn |> json(%{podcasts: []})
   end
 
   defp search(conn, query) do
@@ -38,6 +28,6 @@ defmodule PocaWeb.SearchController do
       |> Enum.filter(& &1)
       |> Enum.sort_by(fn podcast -> results |> Enum.find_index(&(&1.feed_url == podcast.feed_url)) end)
 
-    conn |> assign_prop(:podcasts, PocaWeb.ResourceJSON.render(podcasts))
+    conn |> json(%{podcasts: PocaWeb.ResourceJSON.render(podcasts)})
   end
 end

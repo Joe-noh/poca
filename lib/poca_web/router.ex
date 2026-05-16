@@ -8,7 +8,6 @@ defmodule PocaWeb.Router do
     plug :put_root_layout, html: {PocaWeb.Layouts, :root}
     plug :put_secure_browser_headers
     plug PocaWeb.CurrentUserPlug
-    plug Inertia.Plug
   end
 
   pipeline :api do
@@ -35,10 +34,18 @@ defmodule PocaWeb.Router do
     delete "/logout", AuthController, :delete
   end
 
-  scope "/api", PocaWeb do
-    pipe_through :browser
+  scope "/api", PocaWeb.Api do
+    pipe_through [:browser, :require_login]
 
-    resources "/playback", PlaybackController, only: [:update], singleton: true
+    resources "/search", SearchController, only: [:create], singleton: true
+
+    resources "/podcasts", PodcastController, only: [:show] do
+      resources "/subscription", SubscriptionController, only: [:create, :delete], singleton: true
+    end
+
+    resources "/episodes", EpisodeController, only: [] do
+      resources "/playback", PlaybackController, only: [:update], singleton: true
+    end
   end
 
   if Application.compile_env(:poca, :dev_routes) do
@@ -49,19 +56,6 @@ defmodule PocaWeb.Router do
 
   scope "/", PocaWeb do
     pipe_through [:browser, :require_login]
-
-    get "/library", LibraryController, :index
-    get "/queue", QueueController, :index
-
-    resources "/search", SearchController, only: [:show, :create], singleton: true
-
-    resources "/podcasts", PodcastController, only: [:show] do
-      resources "/subscription", SubscriptionController, only: [:create, :delete], singleton: true
-    end
-
-    resources "/episodes", EpisodeController, only: [] do
-      resources "/playback", PlaybackController, only: [:update], singleton: true
-    end
 
     get "/*path", PageController, :spa
   end
