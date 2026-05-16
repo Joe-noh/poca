@@ -23,7 +23,6 @@ export default defineConfig({
     },
     outDir: "../priv/static/assets",
     emptyOutDir: true,
-    copyPublicDir: false,
   },
   resolve: {
     alias: {
