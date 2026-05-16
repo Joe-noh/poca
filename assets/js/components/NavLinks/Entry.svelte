@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { Link } from "@inertiajs/svelte";
+  import { isActive } from '~/router.ts';
   import type { Snippet } from "svelte";
 
   type Props = {
-    href: string;
-    active?: boolean;
+    href: Parameters<typeof isActive>[0];
     children: Snippet;
   };
 
-  const { href, active, children }: Props = $props();
+  const { href, children }: Props = $props();
+  const active = $derived(isActive.startsWith(href));
 </script>
 
-<Link
+<a
   {href}
   class={[
     "group flex flex-col sm:flex-row w-full items-center justify-center sm:justify-start gap-1 sm:gap-4 sm:px-3 py-1 sm:py-2.5 rounded-md hover:bg-hairline sm:transition-colors",
@@ -23,4 +23,4 @@
   <span class={["font-sans text-sm text-ink tracking-wide transition-colors", { "sm:text-paper sm:group-hover:text-ink": active }]}>
     {@render children()}
   </span>
-</Link>
+</a>

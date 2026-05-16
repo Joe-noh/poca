@@ -1,15 +1,6 @@
-import { createInertiaApp } from "@inertiajs/svelte";
+import App from "./App.svelte";
 import { mount } from "svelte";
 import { togglePlay } from "~/stores/player";
-
-createInertiaApp({
-  async resolve(name) {
-    return await import(`./pages/${name}.svelte`);
-  },
-  setup({ App, el, props }) {
-    el && mount(App, { target: el, props });
-  },
-});
 
 document.addEventListener("keydown", (event) => {
   const { code, target } = event;
@@ -19,4 +10,10 @@ document.addEventListener("keydown", (event) => {
     event.preventDefault();
     togglePlay();
   }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const el = document.getElementById("app");
+
+  el && mount(App, { target: el });
 });

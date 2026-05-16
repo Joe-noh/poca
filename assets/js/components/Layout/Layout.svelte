@@ -1,24 +1,22 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
-  import { Link } from "@inertiajs/svelte";
   import NavLinks from "~/components/NavLinks/NavLinks.svelte";
   import Player from "~/components/Player/Player.svelte";
-  import logo from './logo.svg';
+  import logo from "./logo.svg";
 
   type Props = {
-    activeTab: "listen" | "library" | "queue" | "search";
     children: Snippet;
   };
 
-  let { activeTab, children }: Props = $props();
+  let { children }: Props = $props();
 </script>
 
 <main>
   <aside class="flex flex-row sm:flex-col border-hairline sm:gap-12 border-t sm:border-r sm:border-t-0 sm:p-6">
-    <Link href="/" class="w-8 h-8 hidden sm:block">
+    <a href="/listen" class="w-8 h-8 hidden sm:block">
       <img src={logo} alt="POCA" class="w-full h-full" />
-    </Link>
-    <NavLinks {activeTab} />
+    </a>
+    <NavLinks />
   </aside>
   <article class="flex-1 overflow-y-scroll">
     {@render children()}

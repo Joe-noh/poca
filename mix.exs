@@ -42,7 +42,6 @@ defmodule Poca.MixProject do
       {:ecto_sql, "~> 3.13"},
       {:fast_rss, "~> 0.5"},
       {:gettext, "~> 1.0"},
-      {:inertia, "~> 2.0"},
       {:jason, "~> 1.2"},
       {:oban, "~> 2.22"},
       {:phoenix, "~> 1.8.5"},

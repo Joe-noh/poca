@@ -6,6 +6,7 @@ import { phoenixVitePlugin } from "phoenix_vite";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  base: "/assets/",
   server: {
     port: 5173,
     strictPort: true,
@@ -20,8 +21,9 @@ export default defineConfig({
     rollupOptions: {
       input: ["js/app.ts", "css/app.css"],
     },
-    outDir: "../priv/static",
+    outDir: "../priv/static/assets",
     emptyOutDir: true,
+    copyPublicDir: false,
   },
   resolve: {
     alias: {

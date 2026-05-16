@@ -35,7 +35,7 @@ defmodule PocaWeb.ResourceJSON do
       description: podcast.description,
       link: podcast.link,
       artwork_url: podcast.artwork_url,
-      subscribed: podcast.subscribers != [],
+      subscribed: podcast.subscribers != []
     }
   end
 

@@ -42,6 +42,4 @@ config :phoenix_vite, PhoenixVite.Npm,
   assets: [args: [], cd: Path.expand("../assets", __DIR__)],
   vite: [args: ~w(exec -- vite), cd: Path.expand("../assets", __DIR__), env: %{"MIX_BUILD_PATH" => Mix.Project.build_path()}]
 
-config :inertia, history: [encrypt: true], camelize_props: true, endpoint: PocaWeb.Endpoint
-
 import_config "#{config_env()}.exs"
