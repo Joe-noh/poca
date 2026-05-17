@@ -2,7 +2,7 @@
   import { derived } from "svelte/store";
   import { PlayIcon, PauseIcon } from "phosphor-svelte";
   import { formatDuration } from "~/lib/formatter";
-  import { playerStore, togglePlay } from "~/stores/player";
+  import { playerStore, togglePlay, seekTo } from "~/stores/player";
 
   const rate = derived(playerStore, ({ audio }) => {
     if (audio?.currentTime && audio?.duration) {
@@ -11,6 +11,13 @@
       return 0;
     }
   });
+
+  function handleSeek(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const newTime = Number(input.value);
+
+    seekTo(newTime);
+  }
 </script>
 
 {#if $playerStore.episode}
@@ -40,6 +47,7 @@
         max={$playerStore.audio?.duration}
         style={"--rate: " + $rate + "%"}
         class="w-full h-3 flex-1 appearance-none outline-none cursor-pointer"
+        onchange={handleSeek}
       />
       <p class="text-base font-sans text-ink">
         {formatDuration(Math.round($playerStore.currentTime))} / {formatDuration(Math.round($playerStore.duration))}

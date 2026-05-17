@@ -28,7 +28,7 @@ defmodule Poca.Podcasts.Feed do
     try do
       [url: url]
       |> Keyword.merge(Application.get_env(:poca, :feed_req_opts, []))
-      |> Req.request()
+      |> Req.request(cache: true)
     rescue
       e -> {:error, e}
     end

@@ -29,7 +29,7 @@ defmodule Poca.Podcasts.Itunes do
       receive_timeout: 5_000
     ]
     |> Keyword.merge(Application.get_env(:poca, :itunes_req_opts, []))
-    |> Req.request()
+    |> Req.request(cache: true)
     |> case do
       {:ok, response} ->
         {:ok, build_entries(response)}

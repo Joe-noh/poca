@@ -28,7 +28,7 @@
 
 <style>
   main {
-    height: 100vh;
+    height: 100dvh;
     display: grid;
     grid-template:
       "main" 1fr

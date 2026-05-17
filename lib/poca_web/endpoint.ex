@@ -8,7 +8,10 @@ defmodule PocaWeb.Endpoint do
     store: :cookie,
     key: "_poca_key",
     signing_salt: "bA5LYc7L",
-    same_site: "Lax"
+    same_site: "Lax",
+    secure: true,
+    http_only: true,
+    max_age: 30 * 24 * 60 * 60
   ]
 
   # Serve at "/" the static files from "priv/static" directory.

@@ -1,4 +1,5 @@
 import { writable, get } from "svelte/store";
+import { put } from "~/lib/fetcher";
 
 type PlayerState = {
   audio: HTMLAudioElement;
@@ -139,6 +140,14 @@ export function togglePlay() {
   }
 }
 
+export function seekTo(time: number) {
+  const { audio } = get(playerStore);
+
+  if (audio) {
+    audio.currentTime = time;
+  }
+}
+
 function setPlaying(playing: boolean) {
   playerStore.update((state) => ({ ...state, playing }));
 }
@@ -149,15 +158,7 @@ function savePlaybackProgress({ currentTime, duration }: HTMLAudioElement) {
   if (episode) {
     const progress = (currentTime / duration) * 100;
 
-    fetch(`/episodes/${episode.id}/playback`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        currentTime,
-        duration,
-        progress,
-      }),
-    });
+    put(`/api/episodes/${episode.id}/playback`, { currentTime, duration, progress });
   }
 
   playerStore.update((state) => ({ ...state, lastPlaybackSavedAt: Date.now() }));

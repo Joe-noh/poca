@@ -40,6 +40,7 @@ defmodule PocaWeb.Router do
     resources "/search", SearchController, only: [:create], singleton: true
 
     resources "/podcasts", PodcastController, only: [:show] do
+      resources "/episodes", EpisodeController, only: [:index]
       resources "/subscription", SubscriptionController, only: [:create, :delete], singleton: true
     end
 

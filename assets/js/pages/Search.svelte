@@ -1,16 +1,22 @@
 <script lang="ts">
   import { MagnifyingGlassIcon } from "phosphor-svelte";
+  import { post } from "~/lib/fetcher";
   import PodcastThumbnail from "~/components/PodcastThumbnail/PodcastThumbnail.svelte";
 
-  type Props = {
-    podcasts: Podcast[];
-  };
-
-  const { podcasts }: Props = $props();
   let query = $state("");
+  let isLoading = $state(false);
+  let podcasts: Podcast[] = $state([]);
 
-  function handleSubmit(event: Event) {
+  async function handleSubmit(event: Event) {
     event.preventDefault();
+    podcasts = [];
+
+    try {
+      isLoading = true;
+      podcasts = await post<{ podcasts: Podcast[] }>("/api/search", { q: query }).then((body) => body.podcasts);
+    } finally {
+      isLoading = false;
+    }
   }
 </script>
 
@@ -20,8 +26,12 @@
     <input bind:value={query} type="search" inputmode="search" class="w-full py-2 outline-none text-sans text-base" />
   </form>
 </div>
-<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-x-2 gap-y-4 p-2 sm:gap-6 sm:p-6">
-  {#each podcasts as podcast}
-    <PodcastThumbnail {podcast} />
-  {/each}
-</div>
+{#if isLoading}
+  <span>Searching...</span>
+{:else}
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-x-2 gap-y-4 p-2 sm:gap-6 sm:p-6">
+    {#each podcasts as podcast}
+      <PodcastThumbnail {podcast} />
+    {/each}
+  </div>
+{/if}
