@@ -11,7 +11,7 @@
   let { children }: Props = $props();
 </script>
 
-<main>
+<main class="h-screen">
   <aside class="flex flex-row sm:flex-col border-hairline sm:gap-12 border-t sm:border-r sm:border-t-0 sm:p-6">
     <a href="/listen" class="w-8 h-8 hidden sm:block">
       <img src={logo} alt="POCA" class="w-full h-full" />
@@ -28,7 +28,6 @@
 
 <style>
   main {
-    height: 100dvh;
     display: grid;
     grid-template:
       "main" 1fr
