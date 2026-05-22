@@ -3,7 +3,7 @@ defmodule Poca.RefreshFeedWorker do
   An Oban worker that refreshes podcast feeds for all subscribed podcasts.
   """
 
-  use Oban.Worker, queue: :default
+  use Oban.Worker, queue: :default, max_attempts: 3
 
   alias Poca.{Podcasts, Repo}
 

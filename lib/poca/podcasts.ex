@@ -76,6 +76,15 @@ defmodule Poca.Podcasts do
     {:ok, %{podcasts: podcasts}}
   end
 
+  def search_podcasts(query) do
+    Podcast
+    |> where([p], ilike(p.title, ^"%#{query}%"))
+    |> or_where([p], ilike(p.author, ^"%#{query}%"))
+    |> or_where([p], ilike(p.description, ^"%#{query}%"))
+    |> order_by([p], asc: p.inserted_at)
+    |> Repo.all()
+  end
+
   def count_episodes(podcasts) do
     podcast_ids = Enum.map(podcasts, & &1.id)
 
@@ -144,27 +153,26 @@ defmodule Poca.Podcasts do
       {:ok, %{"items" => items}} ->
         episodes =
           Enum.map(items, fn item ->
-            %{
-              "title" => title,
-              "description" => description,
-              "pub_date" => pub_date,
-              "guid" => %{"value" => guid},
-              "enclosure" => %{"url" => audio_url},
-              "itunes_ext" => %{"duration" => duration}
-            } = item
-
-            %{
-              podcast_id: id,
-              guid: guid,
-              title: title,
-              description: description,
-              audio_url: audio_url,
-              duration: Feed.parse_duration(duration),
-              published_at: Feed.parse_pub_date(pub_date),
-              inserted_at: now,
-              updated_at: now
-            }
+            with %{"title" => title, "description" => description, "pub_date" => pub_date, "guid" => guid, "enclosure" => enclosure, "itunes_ext" => ext} <- item,
+                 %{"value" => guid} <- guid,
+                 %{"url" => audio_url} <- enclosure,
+                 %{"duration" => duration} <- ext do
+              %{
+                podcast_id: id,
+                guid: guid,
+                title: title,
+                description: description,
+                audio_url: audio_url,
+                duration: Feed.parse_duration(duration),
+                published_at: Feed.parse_pub_date(pub_date),
+                inserted_at: now,
+                updated_at: now
+              }
+            else
+              _ -> nil
+            end
           end)
+          |> Enum.filter(& &1)
 
         Repo.transact(fn ->
           {:ok, %{podcast: podcast}} = update_podcast(podcast, %{last_fetched_at: now})

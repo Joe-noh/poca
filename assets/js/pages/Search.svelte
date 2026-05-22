@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { searchParams } from "sv-router";
   import { MagnifyingGlassIcon } from "phosphor-svelte";
   import { post } from "~/lib/fetcher";
   import PodcastThumbnail from "~/components/PodcastThumbnail/PodcastThumbnail.svelte";
@@ -9,15 +10,27 @@
 
   async function handleSubmit(event: Event) {
     event.preventDefault();
-    podcasts = [];
 
-    try {
-      isLoading = true;
-      podcasts = await post<{ podcasts: Podcast[] }>("/api/search", { q: query }).then((body) => body.podcasts);
-    } finally {
-      isLoading = false;
-    }
+    searchParams.set("q", query);
   }
+
+  $effect(() => {
+    const q = searchParams.get("q");
+
+    podcasts = [];
+    isLoading = true;
+
+    if (q === null || q === "") {
+      isLoading = false;
+    } else {
+      query = q as string;
+      post<{ podcasts: Podcast[] }>("/api/search", { q })
+        .then((body) => body.podcasts)
+        .then((results) => (podcasts = results))
+        .catch(() => (podcasts = []))
+        .finally(() => (isLoading = false));
+    }
+  });
 </script>
 
 <div class="p-2 sm:p-3 sticky top-0 left-0 right-0 border-b border-hairline bg-paper">

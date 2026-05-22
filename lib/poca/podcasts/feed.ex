@@ -28,7 +28,7 @@ defmodule Poca.Podcasts.Feed do
     try do
       [url: url]
       |> Keyword.merge(Application.get_env(:poca, :feed_req_opts, []))
-      |> Req.request(cache: true)
+      |> Req.request()
     rescue
       e -> {:error, e}
     end
@@ -44,7 +44,9 @@ defmodule Poca.Podcasts.Feed do
   def parse_duration(nil), do: 0
 
   def parse_duration(duration) when is_binary(duration) do
-    String.split(duration, ":")
+    String.split(duration, ".")
+    |> List.first()
+    |> String.split(":")
     |> Enum.map(&String.to_integer/1)
     |> case do
       [h, m, s] -> h * 3600 + m * 60 + s
