@@ -9,7 +9,7 @@
 
 </script>
 
-<span class="text-sm font-sans text-muted">{formatDuration(episode.duration)}</span>
+<span class="text-sm font-serif text-muted">{formatDuration(episode.duration)}</span>
 <div class="relative w-full h-0.5 rounded-md bg-hairline mt-1">
   <div
     class="absolute top-0 left-0 h-0.5 rounded-md bg-muted"

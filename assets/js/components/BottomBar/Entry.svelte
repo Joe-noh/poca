@@ -1,13 +1,15 @@
 <script lang="ts">
+  import type { Component } from "svelte";
   import { isActive } from "~/router.ts";
   import type { Snippet } from "svelte";
 
   type Props = {
     href: Parameters<typeof isActive>[0];
+    icon: Component;
     children: Snippet;
   };
 
-  const { href, children }: Props = $props();
+  const { href, icon: Icon, children }: Props = $props();
   const active = $derived(isActive.startsWith(href));
 </script>
 
@@ -18,8 +20,8 @@
     "outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-ink",
   ]}
 >
-  <div class={["w-1 h-1 rounded-full group-hover:bg-muted", { "bg-ink": active }]}></div>
-  <span class={["font-sans text-sm text-ink tracking-wide transition-colors"]}>
+  <Icon size={16} weight={active ? "fill" : "regular"} class={active ? "text-ink" : "text-muted"} />
+  <span class={["font-serif text-sm text-ink tracking-wide transition-colors"]}>
     {@render children()}
   </span>
 </a>

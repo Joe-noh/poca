@@ -11,10 +11,12 @@
   }));
 </script>
 
-{#if query.isLoading}
-  <span></span>
-{:else if query.isError}
-  <span>{query.error.message}</span>
-{:else if query.data}
-  <EpisodeList episodes={query.data} />
-{/if}
+<div class="min-h-screen">
+  {#if query.isLoading}
+    <span></span>
+  {:else if query.isError}
+    <span>{query.error.message}</span>
+  {:else if query.data}
+    <EpisodeList episodes={query.data} />
+  {/if}
+</div>

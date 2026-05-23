@@ -72,8 +72,8 @@
         <img src={podcast.artworkUrl} alt={podcast.title} class="w-24 sm:w-36 aspect-square object-cover rounded-md" />
         <div class="flex flex-col items-start justify-between gap-1">
           <div class="flex flex-col gap-1">
-            <p class="font-bold font-sans text-ink">{podcast.title}</p>
-            <p class="text-sm font-sans text-muted">{podcast.author}</p>
+            <p class="font-bold font-serif text-ink">{podcast.title}</p>
+            <p class="text-sm font-serif text-muted">{podcast.author}</p>
           </div>
           <button
             type="button"

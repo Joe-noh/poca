@@ -20,7 +20,7 @@
   ]}
 >
   <div class={["w-1 h-1 rounded-full group-hover:bg-muted", active ? "group-hover:bg-muted bg-paper" : "bg-muted"]}></div>
-  <span class={["font-sans text-sm text-ink tracking-wide transition-colors", { "text-paper group-hover:text-ink": active }]}>
+  <span class={["font-serif text-sm text-ink tracking-wide transition-colors", { "text-paper group-hover:text-ink": active }]}>
     {@render children()}
   </span>
 </a>
