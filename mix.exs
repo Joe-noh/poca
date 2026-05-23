@@ -65,13 +65,27 @@ defmodule Poca.MixProject do
       setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      "ecto.migrate": ["ecto.migrate", "ecto.dump -q"],
-      "ecto.rollback": ["ecto.rollback", "ecto.dump -q"],
+      "ecto.migrate": &migrate/1,
+      "ecto.rollback": &rollback/1,
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["phoenix_vite.npm assets install"],
       "assets.build": ["phoenix_vite.npm vite build"],
       "assets.deploy": ["assets.build"],
       precommit: ["compile --warnings-as-errors", "deps.unlock --unused", "format", "test"]
     ]
+  end
+
+  defp migrate(args), do: with_dump("ecto.migrate", args)
+  defp rollback(args), do: with_dump("ecto.rollback", args)
+
+  defp with_dump(task, args) do
+    case Mix.env() do
+      :test ->
+        Mix.Task.run(task, args)
+
+      _ ->
+        Mix.Task.run(task, args)
+        Mix.Task.run("ecto.dump", ["-q"])
+    end
   end
 end
