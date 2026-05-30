@@ -7,6 +7,7 @@ defmodule Poca.Accounts do
   alias Poca.Repo
 
   alias Poca.Accounts.{User, SocialAccount}
+  alias Poca.Podcasts
 
   def get_user(nil), do: nil
   def get_user(id), do: User |> where([u], u.id == ^id) |> Repo.one()
@@ -39,7 +40,8 @@ defmodule Poca.Accounts do
     Repo.transact(fn ->
       with {:ok, user} <- User.changeset(%User{}, %{}) |> Repo.insert(),
            changeset = user |> Ecto.build_assoc(:social_accounts) |> SocialAccount.changeset(%{provider: "google", uid: uid}),
-           {:ok, _account} <- Repo.insert(changeset) do
+           {:ok, _account} <- Repo.insert(changeset),
+           {:ok, _queue} <- Podcasts.create_queue(user) do
         {:ok, user}
       end
     end)

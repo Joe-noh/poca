@@ -17,6 +17,8 @@
   {:else if query.isError}
     <span>{query.error.message}</span>
   {:else if query.data}
-    <EpisodeList episodes={query.data} />
+    <div class="min-h-screen">
+      <EpisodeList episodes={query.data} />
+    </div>
   {/if}
 </div>
