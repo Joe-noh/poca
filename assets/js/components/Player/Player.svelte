@@ -55,7 +55,7 @@
         <button
           onclick={togglePlay}
           class={[
-            "text-paper bg-ink rounded-full p-2.5 cursor-pointer transition-colors disabled:cursor-not-allowed disabled:bg-hairline disabled:text-muted",
+            "text-paper bg-ink border-ink border rounded-full p-3 cursor-pointer transition-colors disabled:cursor-not-allowed disabled:bg-hairline disabled:text-muted",
             "outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink",
           ]}
         >

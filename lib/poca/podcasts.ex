@@ -262,4 +262,23 @@ defmodule Poca.Podcasts do
     |> Multi.insert(:playback, changeset, on_conflict: {:replace_all_except, [:id, :user_id, :episode_id]}, conflict_target: [:user_id, :episode_id])
     |> Repo.transact()
   end
+
+  def create_queue(%User{id: user_id}) do
+    %Poca.Podcasts.Queue{user_id: user_id}
+    |> Poca.Podcasts.Queue.changeset(%{})
+    |> Repo.insert(on_conflict: :nothing)
+  end
+
+  def list_queue_episodes(%User{id: user_id}) do
+    episodes =
+      Poca.Podcasts.Queue
+      |> where([q], q.user_id == ^user_id)
+      |> join(:inner, [q], e in assoc(q, :episodes), as: :episodes)
+      |> select([q, episodes: e], e)
+      |> order_by([q, episodes: e], asc: e.inserted_at)
+      |> limit(100)
+      |> Repo.all()
+
+    {:ok, %{episodes: episodes}}
+  end
 end

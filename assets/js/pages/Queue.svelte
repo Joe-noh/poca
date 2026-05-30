@@ -1,4 +1,24 @@
 <script lang="ts">
+  import { createQuery } from "@tanstack/svelte-query";
+  import EpisodeList from "~/components/EpisodeList/EpisodeList.svelte";
+  import { get } from "~/lib/fetcher";
+
+  const query = createQuery(() => ({
+    queryKey: ["queue", "episodes"],
+    queryFn: () => {
+      return get<{ episodes: Episode[] }>("/api/queue/episodes").then((body) => body.episodes);
+    },
+  }));
 </script>
 
-<span>Queue</span>
+<div class="min-h-screen">
+  {#if query.isLoading}
+    <span></span>
+  {:else if query.isError}
+    <span>{query.error.message}</span>
+  {:else if query.data}
+    <div class="min-h-screen">
+      <EpisodeList episodes={query.data} />
+    </div>
+  {/if}
+</div>

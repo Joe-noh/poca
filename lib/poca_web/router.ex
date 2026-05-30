@@ -47,6 +47,12 @@ defmodule PocaWeb.Router do
     resources "/episodes", EpisodeController, only: [:index] do
       resources "/playback", PlaybackController, only: [:update], singleton: true
     end
+
+    resources "/queue", QueueController, only: [], singleton: true do
+      resources "/episodes", QueueEpisodeController, only: [:index, :create, :delete] do
+        put "/move", QueueEpisodeController, :move, on: :collection
+      end
+    end
   end
 
   if Application.compile_env(:poca, :dev_routes) do
