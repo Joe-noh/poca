@@ -15,7 +15,9 @@
     <article class="flex-1 overflow-y-scroll">
       {@render children()}
     </article>
-    <Player />
-    <BottomBar />
+    <div class="sticky bottom-0">
+      <Player />
+      <BottomBar />
+    </div>
   </div>
 </main>
