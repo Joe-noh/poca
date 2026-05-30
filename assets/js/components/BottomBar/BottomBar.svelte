@@ -3,7 +3,7 @@
   import Entry from "./Entry.svelte";
 </script>
 
-<div class="sticky bottom-0 bg-paper z-20 border-t border-hairline sm:hidden">
+<div class="sticky bottom-0 bg-paper z-20 border-t border-hairline">
   <nav class="flex-1 flex flex-row h-14 gap-1">
     <Entry href="/listen" icon={HouseIcon}>Home</Entry>
     <Entry href="/library" icon={BooksIcon}>Library</Entry>

@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
   import BottomBar from "~/components/BottomBar/BottomBar.svelte";
-  import SideBar from "~/components/SideBar/SideBar.svelte";
   import Player from "~/components/Player/Player.svelte";
 
   type Props = {
@@ -11,13 +10,12 @@
   let { children }: Props = $props();
 </script>
 
-<main class="h-screen">
-  <div class="flex flex-col sm:flex-row h-screen">
-    <SideBar />
+<main class="max-w-4xl mx-auto">
+  <div class="flex flex-col h-screen">
     <article class="flex-1 overflow-y-scroll">
       {@render children()}
-      <Player />
     </article>
+    <Player />
     <BottomBar />
   </div>
 </main>
